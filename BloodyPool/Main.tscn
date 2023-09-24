@@ -1,0 +1,60 @@
+[gd_scene load_steps=13 format=3 uid="uid://bsif5pyo2s2e2"]
+
+[ext_resource type="Script" path="res://example_use.gd" id="1_dfam4"]
+[ext_resource type="Shader" uid="uid://cjnutuh4ax5sr" path="res://bloody_pool.tres" id="1_gjjxa"]
+[ext_resource type="Texture2D" uid="uid://bli26ctfp7vd8" path="res://Images/blood_splash_custom.png" id="3_3owig"]
+[ext_resource type="Texture2D" uid="uid://donpg7umcw5r5" path="res://Images/floor_height.png" id="4_htya4"]
+[ext_resource type="Texture2D" uid="uid://cy44h2lf4pvxc" path="res://Images/floor_roughness.png" id="5_a2uem"]
+[ext_resource type="Script" path="res://blood_pool.gd" id="6_5sn80"]
+[ext_resource type="Texture2D" uid="uid://djf80bihgjaxq" path="res://Images/floor_albedo.png" id="6_8kpuf"]
+[ext_resource type="PackedScene" uid="uid://orwpssgatan0" path="res://hearth.glb" id="7_ahlj3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ea65x"]
+render_priority = 0
+shader = ExtResource("1_gjjxa")
+shader_parameter/blood_color = Color(0.74902, 0, 0, 1)
+shader_parameter/blood_merge_factor = 0.2
+shader_parameter/blood_density_on_heightmap = true
+shader_parameter/floor_texture = ExtResource("6_8kpuf")
+shader_parameter/floor_heightmap = ExtResource("4_htya4")
+shader_parameter/floor_roughnessmap = ExtResource("5_a2uem")
+shader_parameter/blood_texture = ExtResource("3_3owig")
+shader_parameter/positions = PackedVector2Array()
+shader_parameter/scales = PackedFloat32Array()
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d1pfq"]
+material = SubResource("ShaderMaterial_ea65x")
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nqflr"]
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="Environment" id="Environment_ki01q"]
+background_mode = 1
+background_color = Color(0.160784, 0, 0, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="ExampleOfUse" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+script = ExtResource("1_dfam4")
+
+[node name="BloodPool" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_d1pfq")
+script = ExtResource("6_5sn80")
+
+[node name="Area3D" type="Area3D" parent="BloodPool"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BloodPool/Area3D"]
+shape = SubResource("BoxShape3D_nqflr")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.62932, 0.777146, 0, -0.777146, 0.62932, 0, 0.728, 1.039)
+environment = SubResource("Environment_ki01q")
+
+[node name="hearth" parent="." instance=ExtResource("7_ahlj3")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.245, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.838217, 1.24, 0.976432)
