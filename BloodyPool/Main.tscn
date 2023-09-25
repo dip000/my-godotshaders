@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bsif5pyo2s2e2"]
+[gd_scene load_steps=15 format=3 uid="uid://bsif5pyo2s2e2"]
 
 [ext_resource type="Script" path="res://example_use.gd" id="1_dfam4"]
 [ext_resource type="Shader" uid="uid://cjnutuh4ax5sr" path="res://bloody_pool.tres" id="1_gjjxa"]
@@ -36,6 +36,18 @@ background_color = Color(0.160784, 0, 0, 1)
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6gd7l"]
+transparency = 1
+albedo_color = Color(0.631373, 0.0941176, 0.0862745, 1)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_uxyhy"]
+material = SubResource("StandardMaterial3D_6gd7l")
+size = Vector2(0.01, 0.085)
+
 [node name="ExampleOfUse" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
 script = ExtResource("1_dfam4")
@@ -55,6 +67,12 @@ environment = SubResource("Environment_ki01q")
 
 [node name="hearth" parent="." instance=ExtResource("7_ahlj3")]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.245, 0)
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="hearth"]
+local_coords = true
+mesh = SubResource("QuadMesh_uxyhy")
+emission_shape = 1
+emission_sphere_radius = 0.25
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.838217, 1.24, 0.976432)
