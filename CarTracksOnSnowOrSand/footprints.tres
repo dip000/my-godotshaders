@@ -6,9 +6,9 @@ code = "shader_type spatial;
 group_uniforms SetupTheseValues;
 uniform sampler2D viewport_texture; // Set it as: \"New ViewportTexture\" and select your SubViewport Node in the scene tree
 uniform sampler2D floor_texture:hint_default_white;
-uniform sampler2D floor_height:hint_default_white;
-uniform vec3 trail_color_mix:source_color;
-uniform float floor_mix:hint_range(0.0, 1.0) = 0.5;
+uniform sampler2D floor_heightmap:hint_default_white;
+uniform vec3 color_mix:source_color;
+uniform float mix_value:hint_range(0.0, 1.0) = 0.5;
 uniform float step_weight:hint_range(0.0, 1.0) = 0.2;
 group_uniforms;
 
@@ -18,17 +18,17 @@ void fragment() {
 	vec3 ground = texture(floor_texture, UV).rgb;
 	
 	if(trail < 1.0){
-		ALBEDO = mix(ground, trail_color_mix, floor_mix) * 0.8;
+		ALBEDO = mix(ground, color_mix, mix_value) * 0.8;
 	}
 	else{
-		ALBEDO = mix(ground, trail_color_mix, 0.5);
+		ALBEDO = mix(ground, color_mix, 0.5);
 	}
 }
 
 void vertex() {
 	float trail = texture(viewport_texture, UV).r;
 	if(trail >= 1.0){
-		VERTEX.y = texture(floor_height, UV).y * step_weight;
+		VERTEX.y = texture(floor_heightmap, UV).y * step_weight;
 	}
 	
 	NORMAL.y = normalize(VERTEX.y);

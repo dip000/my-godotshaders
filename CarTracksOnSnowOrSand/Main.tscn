@@ -18,12 +18,12 @@ viewport_path = NodePath("SubViewport")
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_l1j3m")
-shader_parameter/trail_color_mix = Color(0, 0.513726, 0.537255, 1)
-shader_parameter/floor_mix = 0.5
-shader_parameter/step_weight = 0.426
+shader_parameter/color_mix = Color(0, 0.654902, 0.654902, 1)
+shader_parameter/mix_value = 0.632
+shader_parameter/step_weight = 0.45
 shader_parameter/viewport_texture = SubResource("ViewportTexture_xa88w")
 shader_parameter/floor_texture = ExtResource("3_8neod")
-shader_parameter/floor_height = ExtResource("3_8neod")
+shader_parameter/floor_heightmap = ExtResource("3_8neod")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_8muh3"]
 resource_local_to_scene = true
