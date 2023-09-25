@@ -3,12 +3,14 @@
 [resource]
 code = "shader_type spatial;
 
-uniform sampler2D viewport_texture;
+group_uniforms SetupTheseValues;
+uniform sampler2D viewport_texture; // Set it as: \"New ViewportTexture\" and select your SubViewport Node in the scene tree
 uniform sampler2D floor_texture:hint_default_white;
 uniform sampler2D floor_height:hint_default_white;
 uniform vec3 trail_color_mix:source_color;
 uniform float floor_mix:hint_range(0.0, 1.0) = 0.5;
-uniform float step_weight:hint_range(0.0, 1.0) = 0.0;
+uniform float step_weight:hint_range(0.0, 1.0) = 0.2;
+group_uniforms;
 
 
 void fragment() {

@@ -24,12 +24,13 @@ func _physics_process(delta:float):
 	
 	# Move and rotate car towards point continuously
 	global_position = lerp(global_position, mouse_position, delta)
-	look_at(mouse_position)
-	
-	# Animate wheels according to car's speed
 	var speed:float = (global_position - mouse_position).length()
-	for wheel in wheels:
-		wheel.rotate(Vector3.LEFT, delta*speed*5.0)
+	if speed > 0.01:
+		look_at(mouse_position)
+	
+		# Animate wheels according to car's speed
+		for wheel in wheels:
+			wheel.rotate(Vector3.LEFT, delta*speed*5.0)
 
 
 func _detect_from_cam_to_mouse() -> Dictionary:

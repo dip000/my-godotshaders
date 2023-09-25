@@ -18,9 +18,9 @@ viewport_path = NodePath("SubViewport")
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_l1j3m")
-shader_parameter/trail_color_mix = Color(0, 0.396078, 0.415686, 1)
-shader_parameter/floor_mix = 0.599
-shader_parameter/step_weight = 0.28
+shader_parameter/trail_color_mix = Color(0, 0.513726, 0.537255, 1)
+shader_parameter/floor_mix = 0.5
+shader_parameter/step_weight = 0.426
 shader_parameter/viewport_texture = SubResource("ViewportTexture_xa88w")
 shader_parameter/floor_texture = ExtResource("3_8neod")
 shader_parameter/floor_height = ExtResource("3_8neod")
@@ -29,8 +29,8 @@ shader_parameter/floor_height = ExtResource("3_8neod")
 resource_local_to_scene = true
 material = SubResource("ShaderMaterial_ctokp")
 size = Vector2(10, 10)
-subdivide_width = 256
-subdivide_depth = 256
+subdivide_width = 512
+subdivide_depth = 512
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0v47j"]
 size = Vector3(10.0605, 0.1, 10.0717)
@@ -40,13 +40,13 @@ background_mode = 1
 background_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_suej4"]
+offsets = PackedFloat32Array(0, 0.476744)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_xgya4"]
 gradient = SubResource("Gradient_suej4")
 fill = 1
-fill_from = Vector2(0.533835, 0.492481)
-fill_to = Vector2(0.947368, 0.0639098)
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_64uqg"]
 transparency = 1
@@ -55,17 +55,18 @@ albedo_texture = SubResource("GradientTexture2D_xgya4")
 
 [sub_resource type="QuadMesh" id="QuadMesh_arh4n"]
 material = SubResource("StandardMaterial3D_64uqg")
-size = Vector2(0.19, 0.395)
+size = Vector2(0.29, 0.63)
 
 [sub_resource type="Gradient" id="Gradient_5n4dt"]
-offsets = PackedFloat32Array(0, 0.0353982, 0.99115, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.0507269, 0.0507269, 0.0507269, 0.949273, 0.946903, 0.946903, 0.946903, 0.0530974, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.982301, 1)
+colors = PackedColorArray(0.109804, 0.109804, 0.109804, 1, 0.946903, 0.946903, 0.946903, 0.0530974, 1, 1, 1, 0)
 
 [node name="ExampleOfUse" type="Node3D"]
 
 [node name="NOTES" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.67251, 0)
-text = "Notes:
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.17429, 0)
+text = "Notes
+0.  Anything being rendered inside the SubViewport camera is being sent to the shader on real time
  1. Camera inside SubViewport must only have cull mask in layer2
 2. Every VisualInstance inside SubViewport must be in layer2
 3. Actual game camera must NOT have cullmask in layer2
@@ -75,14 +76,6 @@ text = "Notes:
 transform = Transform3D(0.704016, 0.42987, -0.565308, 0, 0.796003, 0.605293, 0.710184, -0.426136, 0.560398, -4.14, 1.126, 4.01)
 cull_mask = 1048573
 environment = SubResource("Environment_i3pvo")
-
-[node name="Floor" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_8muh3")
-
-[node name="Area3D" type="Area3D" parent="Floor"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Area3D"]
-shape = SubResource("BoxShape3D_0v47j")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.86431, 4.69709, 3.92687)
@@ -105,6 +98,14 @@ Creative Commons Attribution"
 font_size = 13
 outline_size = 6
 
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_8muh3")
+
+[node name="Area3D" type="Area3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Area3D"]
+shape = SubResource("BoxShape3D_0v47j")
+
 [node name="SubViewport" type="SubViewport" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
@@ -115,45 +116,45 @@ environment = SubResource("Environment_ms5u6")
 [node name="RemoteParticles" type="Node3D" parent="SubViewport"]
 
 [node name="FrontLeft" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
-transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0.399, 0.063, 0.825)
+transform = Transform3D(-0.997109, -0.0759882, -3.32155e-09, 0, -4.37114e-08, 1, -0.0759882, 0.997109, 4.3585e-08, 0.39994, 0.063, -0.474836)
 layers = 2
 amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0, 0, 0, 1)
+color = Color(0.109804, 0.109804, 0.109804, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="FrontRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
-transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.396188, 0.0634864, 0.88001)
+transform = Transform3D(-0.997109, -0.0759882, -3.32155e-09, 0, -4.37114e-08, 1, -0.0759882, 0.997109, 4.3585e-08, -0.397128, 0.0634864, -0.480409)
 layers = 2
 amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0, 0, 0, 1)
+color = Color(0.109804, 0.109804, 0.109804, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="BackLeftt" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
-transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0.398887, 0.0634864, -0.529148)
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0.393684, 0.0634864, 0.917897)
 layers = 2
 amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0, 0, 0, 1)
+color = Color(0.109804, 0.109804, 0.109804, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="BackRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
-transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.396188, 0.0634864, -0.529148)
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.401391, 0.0634864, 0.917897)
 layers = 2
 amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0, 0, 0, 1)
+color = Color(0.109804, 0.109804, 0.109804, 1)
 color_ramp = SubResource("Gradient_5n4dt")
