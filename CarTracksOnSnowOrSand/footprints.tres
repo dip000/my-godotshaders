@@ -11,7 +11,6 @@ uniform float floor_mix:hint_range(0.0, 1.0) = 0.5;
 uniform float step_weight:hint_range(0.0, 1.0) = 0.0;
 
 
-
 void fragment() {
 	float trail = texture(viewport_texture, UV).r;
 	vec3 ground = texture(floor_texture, UV).rgb;
