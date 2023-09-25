@@ -1,0 +1,33 @@
+[gd_resource type="Shader" format=3 uid="uid://lappm6o7lj1m"]
+
+[resource]
+code = "shader_type spatial;
+
+uniform sampler2D viewport_texture;
+uniform sampler2D floor_texture:hint_default_white;
+uniform sampler2D floor_height:hint_default_white;
+uniform vec3 trail_color_mix:source_color;
+uniform float floor_mix:hint_range(0.0, 1.0) = 0.5;
+uniform float step_weight:hint_range(0.0, 1.0) = 0.0;
+
+
+
+void fragment() {
+	float trail = texture(viewport_texture, UV).r;
+	vec3 ground = texture(floor_texture, UV).rgb;
+	
+	if(trail < 1.0){
+		ALBEDO = mix(ground, trail_color_mix, floor_mix) * 0.8;
+	}
+	else{
+		ALBEDO = mix(ground, trail_color_mix, 0.5);
+	}
+}
+
+void vertex() {
+	float trail = texture(viewport_texture, UV).r;
+	if(trail >= 1.0){
+		VERTEX.y = texture(floor_height, UV).y * step_weight;
+	}
+}
+"
