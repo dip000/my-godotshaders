@@ -29,5 +29,7 @@ void vertex() {
 	if(trail >= 1.0){
 		VERTEX.y = texture(floor_height, UV).y * step_weight;
 	}
+	
+	NORMAL.y = normalize(VERTEX.y);
 }
 "

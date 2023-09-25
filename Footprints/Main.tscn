@@ -1,9 +1,15 @@
-[gd_scene load_steps=18 format=3 uid="uid://ijwkh6k8gx8m"]
+[gd_scene load_steps=16 format=3 uid="uid://ijwkh6k8gx8m"]
 
-[ext_resource type="Script" path="res://example_of_use.gd" id="1_mfe64"]
 [ext_resource type="Shader" uid="uid://lappm6o7lj1m" path="res://footprints.tres" id="2_l1j3m"]
 [ext_resource type="Script" path="res://footprints.gd" id="3_6c64c"]
 [ext_resource type="Texture2D" uid="uid://1cujdx38cxxa" path="res://Images/snow_height.png" id="3_8neod"]
+[ext_resource type="PackedScene" uid="uid://blroyoyd0uuc5" path="res://car.glb" id="5_r7oxn"]
+
+[sub_resource type="Environment" id="Environment_i3pvo"]
+background_mode = 1
+background_color = Color(0, 0.298039, 0.298039, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_xa88w"]
 viewport_path = NodePath("SubViewport")
@@ -14,7 +20,7 @@ render_priority = 0
 shader = ExtResource("2_l1j3m")
 shader_parameter/trail_color_mix = Color(0, 0.396078, 0.415686, 1)
 shader_parameter/floor_mix = 0.599
-shader_parameter/step_weight = 0.12
+shader_parameter/step_weight = 0.28
 shader_parameter/viewport_texture = SubResource("ViewportTexture_xa88w")
 shader_parameter/floor_texture = ExtResource("3_8neod")
 shader_parameter/floor_height = ExtResource("3_8neod")
@@ -22,27 +28,25 @@ shader_parameter/floor_height = ExtResource("3_8neod")
 [sub_resource type="PlaneMesh" id="PlaneMesh_8muh3"]
 resource_local_to_scene = true
 material = SubResource("ShaderMaterial_ctokp")
-subdivide_width = 128
-subdivide_depth = 128
+size = Vector2(10, 10)
+subdivide_width = 256
+subdivide_depth = 256
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0v47j"]
-size = Vector3(2, 0.1, 2)
+size = Vector3(10.0605, 0.1, 10.0717)
 
-[sub_resource type="Environment" id="Environment_i3pvo"]
+[sub_resource type="Environment" id="Environment_ms5u6"]
 background_mode = 1
 background_color = Color(1, 1, 1, 1)
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_suej4"]
-offsets = PackedFloat32Array(0.476744, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_xgya4"]
 gradient = SubResource("Gradient_suej4")
 fill = 1
 fill_from = Vector2(0.533835, 0.492481)
-fill_to = Vector2(0.864662, 0.161654)
+fill_to = Vector2(0.947368, 0.0639098)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_64uqg"]
 transparency = 1
@@ -51,85 +55,69 @@ albedo_texture = SubResource("GradientTexture2D_xgya4")
 
 [sub_resource type="QuadMesh" id="QuadMesh_arh4n"]
 material = SubResource("StandardMaterial3D_64uqg")
-size = Vector2(0.3, 0.3)
+size = Vector2(0.19, 0.395)
 
 [sub_resource type="Gradient" id="Gradient_5n4dt"]
 offsets = PackedFloat32Array(0, 0.0353982, 0.99115, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0.0507269, 0.0507269, 0.0507269, 0.949273, 0.946903, 0.946903, 0.946903, 0.0530974, 1, 1, 1, 0)
 
-[sub_resource type="Animation" id="Animation_jcout"]
-resource_name = "run"
-length = 7.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Middle:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3.1, 7),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(1.44455, 0, 0.445818), Vector3(3.71862, 0, 0.445818), Vector3(3.71862, 0, 0.445818)]
-}
-
-[sub_resource type="Animation" id="Animation_ljetq"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Middle:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(3.71862, 0, 0.445818)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_k70ys"]
-_data = {
-"RESET": SubResource("Animation_ljetq"),
-"run": SubResource("Animation_jcout")
-}
-
 [node name="ExampleOfUse" type="Node3D"]
-script = ExtResource("1_mfe64")
+
+[node name="NOTES" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.67251, 0)
+text = "Notes:
+ 1. Camera inside SubViewport must only have cull mask in layer2
+2. Every VisualInstance inside SubViewport must be in layer2
+3. Actual game camera must NOT have cullmask in layer2
+4. Every VisualInstance outside SubViewport must NOT be in layer2"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.704016, 0.42987, -0.565308, 0, 0.796003, 0.605293, 0.710184, -0.426136, 0.560398, -4.14, 1.126, 4.01)
+cull_mask = 1048573
+environment = SubResource("Environment_i3pvo")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.118454, 0, 0.486527)
 mesh = SubResource("PlaneMesh_8muh3")
-script = ExtResource("3_6c64c")
 
 [node name="Area3D" type="Area3D" parent="Floor"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Area3D"]
 shape = SubResource("BoxShape3D_0v47j")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.843879, 0.536534, 0, -0.536534, 0.843879, -0.270394, 0.471969, 1.2072)
-cull_mask = 1048573
-environment = SubResource("Environment_i3pvo")
-
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.86431, 4.69709, 3.92687)
+light_energy = 7.297
+light_cull_mask = 4294967293
+omni_range = 7.838
+
+[node name="car" parent="." instance=ExtResource("5_r7oxn")]
+script = ExtResource("3_6c64c")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="car"]
+remote_path = NodePath("../../SubViewport/RemoteParticles")
+
+[node name="Label3D" type="Label3D" parent="car"]
+transform = Transform3D(0.6, 0, 1.04907e-07, 0, 0.6, 0, -1.04907e-07, 0, 0.6, 0, 0.405047, 1.39287)
+text = "Car (LowPoly)
+by Rafael Rodrigues
+is licensed under
+Creative Commons Attribution"
+font_size = 13
+outline_size = 6
 
 [node name="SubViewport" type="SubViewport" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 2.5, 1.42048, 0.5)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 6.66, 0)
 cull_mask = 1047554
-environment = SubResource("Environment_i3pvo")
+environment = SubResource("Environment_ms5u6")
 
-[node name="Middle" type="Node3D" parent="SubViewport"]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.71862, 0, 0.445818)
+[node name="RemoteParticles" type="Node3D" parent="SubViewport"]
 
-[node name="CPUParticles3D" type="CPUParticles3D" parent="SubViewport/Middle"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.251382, 0, 0.00506335)
+[node name="FrontLeft" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0.399, 0.063, 0.825)
 layers = 2
-amount = 60
+amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
@@ -137,10 +125,10 @@ gravity = Vector3(0, 0, 0)
 color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
-[node name="CPUParticles3D2" type="CPUParticles3D" parent="SubViewport/Middle"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.248618, 0, 0.00506335)
+[node name="FrontRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.396188, 0.0634864, 0.88001)
 layers = 2
-amount = 60
+amount = 100
 lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
@@ -148,8 +136,24 @@ gravity = Vector3(0, 0, 0)
 color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewport"]
-autoplay = "run"
-libraries = {
-"": SubResource("AnimationLibrary_k70ys")
-}
+[node name="BackLeftt" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0.398887, 0.0634864, -0.529148)
+layers = 2
+amount = 100
+lifetime = 8.0
+mesh = SubResource("QuadMesh_arh4n")
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+color = Color(0, 0, 0, 1)
+color_ramp = SubResource("Gradient_5n4dt")
+
+[node name="BackRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.396188, 0.0634864, -0.529148)
+layers = 2
+amount = 100
+lifetime = 8.0
+mesh = SubResource("QuadMesh_arh4n")
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+color = Color(0, 0, 0, 1)
+color_ramp = SubResource("Gradient_5n4dt")
