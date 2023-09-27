@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://dhxwuw0f11r1u"]
+
+[ext_resource type="Shader" uid="uid://csqf7jis2m0xr" path="res://world_painter.tres" id="1_g57j5"]
+[ext_resource type="Script" path="res://image_processing.gd" id="4_j1cs3"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ep30x"]
+noise_type = 2
+frequency = 0.027
+fractal_type = 3
+fractal_gain = 0.04
+cellular_jitter = -0.08
+cellular_return_type = 4
+domain_warp_type = 1
+domain_warp_amplitude = 5.185
+domain_warp_frequency = 0.32
+domain_warp_fractal_type = 2
+domain_warp_fractal_octaves = 8
+domain_warp_fractal_lacunarity = 6.915
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iljl8"]
+seamless_blend_skirt = 1.0
+noise = SubResource("FastNoiseLite_ep30x")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0b7wx"]
+render_priority = 0
+shader = ExtResource("1_g57j5")
+shader_parameter/position = Vector2(0, 0)
+shader_parameter/rotation = null
+shader_parameter/scalation = 1.0
+shader_parameter/reveal_factor = 0.102
+shader_parameter/splash_texture = SubResource("NoiseTexture2D_iljl8")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_t7ogs"]
+material = SubResource("ShaderMaterial_0b7wx")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lsfh0"]
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="Environment" id="Environment_w1jai"]
+background_mode = 1
+background_color = Color(0.588235, 0.811765, 0.815686, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="ExampleOfUse" type="Node3D"]
+script = ExtResource("4_j1cs3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_t7ogs")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+shape = SubResource("BoxShape3D_lsfh0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.913957, 0.405812, 0, -0.405812, 0.913957, 0, 0.83743, 1.51535)
+environment = SubResource("Environment_w1jai")
