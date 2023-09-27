@@ -1,8 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://ijwkh6k8gx8m"]
+[gd_scene load_steps=16 format=3 uid="uid://dtkptpruv1ay6"]
 
-[ext_resource type="Shader" uid="uid://lappm6o7lj1m" path="res://footprints.tres" id="2_l1j3m"]
-[ext_resource type="Script" path="res://footprints.gd" id="3_6c64c"]
+[ext_resource type="Script" path="res://car_tracks_exaple_of_use.gd" id="2_bwx1l"]
 [ext_resource type="Texture2D" uid="uid://1cujdx38cxxa" path="res://Images/snow_height.png" id="3_8neod"]
+[ext_resource type="Shader" uid="uid://lappm6o7lj1m" path="res://car_tracks.tres" id="3_tho10"]
 [ext_resource type="PackedScene" uid="uid://blroyoyd0uuc5" path="res://car.glb" id="5_r7oxn"]
 
 [sub_resource type="Environment" id="Environment_i3pvo"]
@@ -17,10 +17,10 @@ viewport_path = NodePath("SubViewport")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ctokp"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("2_l1j3m")
-shader_parameter/color_mix = Color(0, 0.654902, 0.654902, 1)
-shader_parameter/mix_value = 0.632
-shader_parameter/step_weight = 0.45
+shader = ExtResource("3_tho10")
+shader_parameter/trail_color = Color(0, 0.447059, 0.447059, 1)
+shader_parameter/ground_modulate = Color(0.756863, 1, 1, 1)
+shader_parameter/ditch_height = 0.325
 shader_parameter/viewport_texture = SubResource("ViewportTexture_xa88w")
 shader_parameter/floor_texture = ExtResource("3_8neod")
 shader_parameter/floor_heightmap = ExtResource("3_8neod")
@@ -29,8 +29,8 @@ shader_parameter/floor_heightmap = ExtResource("3_8neod")
 resource_local_to_scene = true
 material = SubResource("ShaderMaterial_ctokp")
 size = Vector2(10, 10)
-subdivide_width = 512
-subdivide_depth = 512
+subdivide_width = 256
+subdivide_depth = 256
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0v47j"]
 size = Vector3(10.0605, 0.1, 10.0717)
@@ -59,9 +59,9 @@ size = Vector2(0.29, 0.63)
 
 [sub_resource type="Gradient" id="Gradient_5n4dt"]
 offsets = PackedFloat32Array(0, 0.982301, 1)
-colors = PackedColorArray(0.109804, 0.109804, 0.109804, 1, 0.946903, 0.946903, 0.946903, 0.0530974, 1, 1, 1, 0)
+colors = PackedColorArray(0, 0, 0, 1, 0.946903, 0.946903, 0.946903, 0.0530974, 1, 1, 1, 0)
 
-[node name="ExampleOfUse" type="Node3D"]
+[node name="Main" type="Node3D"]
 
 [node name="NOTES" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.17429, 0)
@@ -84,7 +84,8 @@ light_cull_mask = 4294967293
 omni_range = 7.838
 
 [node name="car" parent="." instance=ExtResource("5_r7oxn")]
-script = ExtResource("3_6c64c")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.830201)
+script = ExtResource("2_bwx1l")
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="car"]
 remote_path = NodePath("../../SubViewport/RemoteParticles")
@@ -114,6 +115,7 @@ cull_mask = 1047554
 environment = SubResource("Environment_ms5u6")
 
 [node name="RemoteParticles" type="Node3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.830201)
 
 [node name="FrontLeft" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
 transform = Transform3D(-0.997109, -0.0759882, -3.32155e-09, 0, -4.37114e-08, 1, -0.0759882, 0.997109, 4.3585e-08, 0.39994, 0.063, -0.474836)
@@ -123,7 +125,7 @@ lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0.109804, 0.109804, 0.109804, 1)
+color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="FrontRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
@@ -134,7 +136,7 @@ lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0.109804, 0.109804, 0.109804, 1)
+color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="BackLeftt" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
@@ -145,7 +147,7 @@ lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0.109804, 0.109804, 0.109804, 1)
+color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")
 
 [node name="BackRight" type="CPUParticles3D" parent="SubViewport/RemoteParticles"]
@@ -156,5 +158,5 @@ lifetime = 8.0
 mesh = SubResource("QuadMesh_arh4n")
 direction = Vector3(0, 0, 0)
 gravity = Vector3(0, 0, 0)
-color = Color(0.109804, 0.109804, 0.109804, 1)
+color = Color(0, 0, 0, 1)
 color_ramp = SubResource("Gradient_5n4dt")

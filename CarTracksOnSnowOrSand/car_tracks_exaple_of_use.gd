@@ -2,7 +2,7 @@
 # The car will move where the mouse pointer goes
 # Make sure the particles are following your car by either appending them as children or using a RemoteTransform3D
 extends Node3D
-class_name Car
+class_name CarExampleOfUse
 
 @onready var cam:Camera3D = $"../Camera3D"
 @onready var wheels:Array[Node3D] = [$WheelFR, $WheelFL, $WheelBR, $WheelBL]
