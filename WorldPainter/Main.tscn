@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhxwuw0f11r1u"]
+[gd_scene load_steps=10 format=3 uid="uid://bg276vqb4q6sv"]
 
+[ext_resource type="Script" path="res://example_of_use.gd" id="1_414lx"]
 [ext_resource type="Shader" uid="uid://csqf7jis2m0xr" path="res://world_painter.tres" id="1_g57j5"]
-[ext_resource type="Texture2D" uid="uid://rump6jx00yui" path="res://Images/splash_texture.png" id="3_2te0n"]
+[ext_resource type="Texture2D" uid="uid://d2kgq7kogm4s4" path="res://Images/base_texture.png" id="3_itypk"]
+[ext_resource type="Texture2D" uid="uid://rump6jx00yui" path="res://Images/splash_gradient.png" id="4_ivle0"]
 [ext_resource type="Script" path="res://image_processing.gd" id="4_j1cs3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0b7wx"]
@@ -9,9 +11,10 @@ render_priority = 0
 shader = ExtResource("1_g57j5")
 shader_parameter/position = Vector2(0, 0)
 shader_parameter/rotation = 0.0
-shader_parameter/scale = null
+shader_parameter/scale = 1.0
 shader_parameter/reveal_factor = 0.0
-shader_parameter/splash_texture = ExtResource("3_2te0n")
+shader_parameter/splash_texture = ExtResource("4_ivle0")
+shader_parameter/base_texture = ExtResource("3_itypk")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t7ogs"]
 material = SubResource("ShaderMaterial_0b7wx")
@@ -26,14 +29,15 @@ ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
 [node name="ExampleOfUse" type="Node3D"]
+script = ExtResource("1_414lx")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_t7ogs")
 script = ExtResource("4_j1cs3")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_t7ogs")
+[node name="Area3D" type="Area3D" parent="Ground"]
 
-[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/Area3D"]
 shape = SubResource("BoxShape3D_lsfh0")
 
 [node name="Camera3D" type="Camera3D" parent="."]

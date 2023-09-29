@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daptq4y8ukvvm"
-path="res://.godot/imported/splash_finish.png-d5fe6de51d89a10ca6c9893732c276cc.ctex"
+uid="uid://rump6jx00yui"
+path="res://.godot/imported/splash_gradient.png-3168dcc5a79f6555078cebf284c21451.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Images/splash_finish.png"
-dest_files=["res://.godot/imported/splash_finish.png-d5fe6de51d89a10ca6c9893732c276cc.ctex"]
+source_file="res://Images/splash_gradient.png"
+dest_files=["res://.godot/imported/splash_gradient.png-3168dcc5a79f6555078cebf284c21451.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

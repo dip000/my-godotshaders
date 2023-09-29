@@ -31,6 +31,6 @@ void vertex() {
 	VERTEX.y = texture(floor_heightmap, UV).r * ditch_height * trail;
 	
 	// Honestly I don't know about normals nearly enough to know if I'm doing it right..
-	NORMAL.y = VERTEX.y;
+	NORMAL = normalize(vec3(NORMAL.x, VERTEX.y, NORMAL.z));
 }
 "
