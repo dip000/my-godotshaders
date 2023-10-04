@@ -1,18 +1,19 @@
 shader_type spatial;
-render_mode cull_disabled, unshaded;
+render_mode cull_disabled, unshaded, shadows_disabled;
 
 uniform float root_level:hint_range(0, 20);
 uniform vec3 color_root:source_color;
 uniform vec3 color_top:source_color;
 uniform vec3 color_top_variant:source_color;
 uniform sampler2D noise_map;
+uniform sampler2D splash_map;
 
 varying vec3 world_pos;
 
 
 void vertex(){
-//	VERTEX.x += sin(NODE_POSITION_WORLD.x + TIME * 1.25 + UV.y) * ( 1.0 - UV.y) * 0.2;
-//	VERTEX.z += cos(NODE_POSITION_WORLD.z + TIME * 0.45 + UV.y) * ( 1.0 - UV.y) * 0.15;
+	VERTEX.x += sin(NODE_POSITION_WORLD.x + TIME * 1.25 + UV.y) * ( 1.0 - UV.y) * 0.2;
+	VERTEX.z += cos(NODE_POSITION_WORLD.z + TIME * 0.45 + UV.y) * ( 1.0 - UV.y) * 0.15;
 
 	// Vertex to world space
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;

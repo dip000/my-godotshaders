@@ -16,7 +16,7 @@ func _input(event):
 		var result:Dictionary = _detect_from_cam_to_mouse()
 		if result:
 			var pos:Vector2 = Vector2(result.position.x, result.position.z) / shader_helper.mesh.size
-			shader_helper.splash_at(pos, 0.3, Color(0.475, 0.141, 0.133))
+			shader_helper.splash_at(pos, 0.3)
 
 func _detect_from_cam_to_mouse() -> Dictionary:
 	query.from = cam.global_position

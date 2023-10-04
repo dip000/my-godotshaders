@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3737h2nj2e15"]
+
+[ext_resource type="Shader" path="res://new_shader.gdshader" id="1_14wm2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1araw"]
+render_priority = 0
+shader = ExtResource("1_14wm2")
+shader_parameter/_thickness = 1
+shader_parameter/_detail = 35.734
+shader_parameter/color = null
+
+[sub_resource type="QuadMesh" id="QuadMesh_wt6a1"]
+material = SubResource("ShaderMaterial_1araw")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.165195)
+mesh = SubResource("QuadMesh_wt6a1")
