@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded;
+render_mode unshaded, shadows_disabled;
 
 uniform sampler2D splash_texture:repeat_disable;
 uniform sampler2D base_texture:hint_default_white;
