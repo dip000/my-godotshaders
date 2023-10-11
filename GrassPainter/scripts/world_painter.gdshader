@@ -1,8 +1,8 @@
 shader_type spatial;
-render_mode unshaded, shadows_disabled;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_toon,unshaded,shadows_disabled,ambient_light_disabled;
 
 uniform sampler2D splash_texture:repeat_disable;
-uniform sampler2D base_texture:hint_default_white;
+uniform sampler2D base_texture:source_color,filter_linear_mipmap,repeat_disable;
 //uniform sampler2D grass_patches:hint_default_white;
 
 uniform vec2 position;

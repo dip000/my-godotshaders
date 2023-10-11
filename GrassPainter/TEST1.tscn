@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://iet1ucgx353d" path="res://Models/GrassSmall.glb" id="9_3nmdo"]
 [ext_resource type="Shader" path="res://edge_sobel.gdshader" id="10_e2hgv"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8dua1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8p8yv"]
 render_priority = 0
 shader = ExtResource("2_kb71f")
 shader_parameter/position = Vector2(0, 0)
@@ -22,7 +22,7 @@ shader_parameter/splash_texture = ExtResource("4_ebxms")
 shader_parameter/base_texture = ExtResource("3_ea7a4")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t7ogs"]
-material = SubResource("ShaderMaterial_8dua1")
+material = SubResource("ShaderMaterial_8p8yv")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lsfh0"]
 size = Vector3(2, 0.1, 2)

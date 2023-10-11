@@ -31,7 +31,7 @@ func splash_at(splash_position:Vector2, slplash_scale:float):
 	_bake_splash_into_base_texture(splash_position, slplash_scale)
 	ground.set_shader_parameter("reveal_factor", 0)
 	ground.set_shader_parameter("base_texture", base_texture)
-	grass.set_shader_parameter("splash_map", base_texture)
+	grass.set_shader_parameter("noise_map", base_texture)
 
 func _set_reveal_factor(value:float):
 	ground.set_shader_parameter("reveal_factor", value)
