@@ -1,0 +1,38 @@
+[gd_scene load_steps=9 format=3 uid="uid://cbrgorm7a61e"]
+
+[ext_resource type="Script" path="res://example_of_use.gd" id="1_83m4u"]
+[ext_resource type="Shader" path="res://paint_surface.gdshader" id="2_8rwds"]
+[ext_resource type="Texture2D" uid="uid://bqhlpkcnb4k34" path="res://Images/base_texture.png" id="3_3s8xv"]
+[ext_resource type="Script" path="res://paint_surface.gd" id="3_duyfa"]
+[ext_resource type="Texture2D" uid="uid://8mqtjhv7jyw" path="res://Images/splash_texture.png" id="4_s4fvu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwkdf"]
+render_priority = 0
+shader = ExtResource("2_8rwds")
+shader_parameter/position = null
+shader_parameter/scale = 0.3
+shader_parameter/color = null
+shader_parameter/reveal_factor = 0.0
+shader_parameter/splash_texture = ExtResource("4_s4fvu")
+shader_parameter/base_texture = ExtResource("3_3s8xv")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5jdrg"]
+material = SubResource("ShaderMaterial_iwkdf")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jpwgr"]
+size = Vector3(2, 0.05, 2)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_83m4u")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_5jdrg")
+script = ExtResource("3_duyfa")
+
+[node name="Area3D" type="Area3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/Area3D"]
+shape = SubResource("BoxShape3D_jpwgr")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.516533, 0.856267, 0, -0.856267, 0.516533, 0, 0.831, 0.924)
