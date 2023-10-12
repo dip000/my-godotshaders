@@ -18,20 +18,23 @@ shader_parameter/base_texture = ExtResource("3_3s8xv")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5jdrg"]
 material = SubResource("ShaderMaterial_iwkdf")
+subdivide_width = 100
+subdivide_depth = 100
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jpwgr"]
 size = Vector3(2, 0.05, 2)
 
-[node name="Node3D" type="Node3D"]
+[node name="ExampleOfUse" type="Node3D"]
 script = ExtResource("1_83m4u")
+splash_color = Color(0.0470588, 0.282353, 1, 0.694118)
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="PaintSurface" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_5jdrg")
 script = ExtResource("3_duyfa")
 
-[node name="Area3D" type="Area3D" parent="Ground"]
+[node name="Area3D" type="Area3D" parent="PaintSurface"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PaintSurface/Area3D"]
 shape = SubResource("BoxShape3D_jpwgr")
 
 [node name="Camera3D" type="Camera3D" parent="."]

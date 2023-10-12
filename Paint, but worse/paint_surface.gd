@@ -1,3 +1,7 @@
+# SHADER LOGIC
+# This script will call the shader to play the splash animation
+# At the end of animation, it will bake the last frame into the base texture so the shader doesn't need to keep inifinite splashes drawn
+# Then again, a shader might as well not even be needed since you can use an AnimatedSprite3D or something
 extends MeshInstance3D
 class_name PaintSurface
 
@@ -47,5 +51,5 @@ func _bake_splash_into_base_texture(pos:Vector2, scal:float, color:Color):
 	
 	# Draws the last frame of the splash animation on top of 'base_texture'
 	var base_img:Image = base_texture.get_image()
-	base_img.blit_rect_mask( splash_color_img, splash_mask_img, FULL_RECT, pos )
+	base_img.blend_rect_mask( splash_color_img, splash_mask_img, FULL_RECT, pos)
 	base_texture.update( base_img )
