@@ -16,8 +16,8 @@ render_priority = 0
 shader = ExtResource("2_kb71f")
 shader_parameter/position = Vector2(0, 0)
 shader_parameter/scale = 0.485
+shader_parameter/color = null
 shader_parameter/reveal_factor = 0.206
-shader_parameter/splash_color = Color(0.811765, 0.686275, 0.501961, 1)
 shader_parameter/splash_texture = ExtResource("4_ebxms")
 shader_parameter/base_texture = ExtResource("3_ea7a4")
 
@@ -160,7 +160,7 @@ visible = false
 [node name="GrassSmall" parent="." instance=ExtResource("9_3nmdo")]
 visible = false
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+[node name="EdgeDetection" type="MeshInstance3D" parent="."]
 mesh = SubResource("QuadMesh_gjs4k")
 
 [editable path="Grass"]
