@@ -1,8 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://c01wuldrrhrrh"]
-
-[resource]
-resource_name = "Overline.001"
-transparency = 1
-cull_mode = 2
-shading_mode = 0
-albedo_color = Color(0.678431, 0.545098, 0.45098, 0)
