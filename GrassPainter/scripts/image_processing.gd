@@ -5,7 +5,8 @@
 extends MeshInstance3D
 class_name PaintSurface
 
-#@onready var _grass_mat:ShaderMaterial = $"../MultiMeshInstance3D".multimesh.mesh.surface_get_material(0)
+@onready var _grass_mat:ShaderMaterial = $"../MultiMeshInstance3D".multimesh.mesh.surface_get_material(0)
+@onready var _grass_mat_small:ShaderMaterial = $"../MultiMeshInstance3DSmall".multimesh.mesh.surface_get_material(0)
 @onready var _surface_mat:ShaderMaterial = get_active_material(0)
 
 var base_texture:ImageTexture
@@ -22,9 +23,9 @@ func _ready():
 	base_texture = ImageTexture.create_from_image( base_texture_compressed.get_image() )
 
 func splash_at(splash_position:Vector2, slplash_scale:float, slplash_color:Color, splash_duration:float=2.0):
-	_surface_mat.set_shader_parameter("position", splash_position)
-	_surface_mat.set_shader_parameter("scale", slplash_scale)
-	_surface_mat.set_shader_parameter("color", slplash_color)
+	_set_all("splash_position", splash_position)
+	_set_all("splash_scale", slplash_scale)
+	_set_all("splash_color", slplash_color)
 	
 	# Start and wait for shader animation to finish
 	var animation:MethodTweener = create_tween().tween_method(_set_reveal_factor, 0.0, 1.0, splash_duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
@@ -33,17 +34,23 @@ func splash_at(splash_position:Vector2, slplash_scale:float, slplash_color:Color
 	# Update baked texture and reset shader
 	# If it lags baking the texture, consider pre-baking it inside a Thread
 	_bake_splash_into_base_texture(splash_position, slplash_scale, slplash_color)
-	_surface_mat.set_shader_parameter("reveal_factor", 0)
-	_surface_mat.set_shader_parameter("base_texture", base_texture)
-#	_grass_mat.set_shader_parameter("noise_map", base_texture)
+	_set_all("reveal_factor", 0)
+	_set_all("color_root_map", base_texture)
+
 
 func _set_reveal_factor(value:float):
-	_surface_mat.set_shader_parameter("reveal_factor", value)
+	_set_all("reveal_factor", value)
+
+func _set_all(param:String, value:Variant):
+	_surface_mat.set_shader_parameter(param, value)
+	_grass_mat.set_shader_parameter(param, value)
+	_grass_mat_small.set_shader_parameter(param, value)
+
 
 func _bake_splash_into_base_texture(pos:Vector2, scal:float, color:Color):
 	var size:Vector2i = SIZE * scal #resize splash
 	pos *= SIZE #move relative to pixel size
-	pos += HALF_SIZE * (1 - scal) #move relative to center
+	pos -= HALF_SIZE * scal #move relative to top-left corner
 	
 	# Create splash
 	var splash_color_img:Image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
@@ -55,3 +62,4 @@ func _bake_splash_into_base_texture(pos:Vector2, scal:float, color:Color):
 	var base_img:Image = base_texture.get_image()
 	base_img.blend_rect_mask( splash_color_img, splash_mask_img, FULL_RECT, pos)
 	base_texture.update( base_img )
+	

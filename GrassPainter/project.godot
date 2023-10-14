@@ -12,7 +12,6 @@ config_version=5
 
 config/name="GrassPainter"
 config/tags=PackedStringArray("godotshaders.com")
-run/main_scene="res://TEST1.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -20,3 +19,4 @@ config/icon="res://icon.svg"
 
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_environment="res://new_environment.tres"

@@ -1,19 +1,26 @@
 shader_type spatial;
-render_mode cull_disabled, unshaded, shadows_disabled;
+render_mode unshaded, shadows_disabled;
+#include "res://Scripts/splash_grow.gdshaderinc"
 
-uniform float root_level:hint_range(0.0, 1.0) = 0.1;
-uniform vec3 color_root:source_color;
-uniform vec3 color_top:source_color;
-uniform vec3 color_top_variant:source_color;
-uniform vec3 color_margin:source_color;
-uniform bool enable_margin;
+group_uniforms SetGrassProperties;
 uniform bool bilboard_y;
-uniform sampler2D noise_map:source_color,filter_linear_mipmap,repeat_disable;
+uniform bool enable_margin;
+uniform vec3 color_margin:source_color;
+
+// Colors of all of the grass instanced from a MultiMesh as seen from the top
+uniform sampler2D color_top_map:source_color,filter_linear_mipmap,repeat_disable;
+uniform sampler2D color_root_map:source_color,filter_linear_mipmap,repeat_disable;
+
+// This must be in gray scale. Usually a GradientTexture2D but can be anything you want, even empty for plain color
+uniform sampler2D mask_front:source_color,filter_linear_mipmap,repeat_disable,hint_default_black;
 uniform sampler2D grass_texture;
+group_uniforms;
+
+const float GROUND_RESIZE = 0.5;
 
 
 void vertex(){
-	// I totally stole this part
+	// I totally stole this line
 	VERTEX.x += sin(NODE_POSITION_WORLD.x + TIME * 1.25 + UV.y) * ( 1.0 - UV.y) * 0.05;
 	
 	if(bilboard_y){
@@ -21,19 +28,18 @@ void vertex(){
 	}
 	
 	// Vertex to world space
-	vec3 world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec2 world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz * GROUND_RESIZE;
 	
-	// Coloring the mesh vertices will look exactly* the same as coloring the pixels but more performant
-	// Recolor noise map to grass variant colors
-	vec3 map = texture(noise_map, world_position.xz).rgb;
-	vec3 recolor_top = mix(color_top, color_top_variant, map.r);
+	// Coloring the mesh vertices will look exactly the same as coloring the pixels but more performant (asuming there are enough subdivisions along z-axis)
+	vec3 recolor_top = texture(color_top_map, world_position).rgb;
+	vec3 recolor_root = texture(color_root_map, world_position).rgb;
+	float gradient_mask = texture(mask_front, UV).r;
 	
-	// Creates a gradient top=black, bottom=white
-	float gradient_mask = smoothstep(0.0, UV.y, root_level);
+	recolor_root = grow_splash(world_position, recolor_root);
 	
-	// Look at it like masking the top with one color, then masking the bottom with another color. Finally adding both half masks in one
-	COLOR.rgb = color_root * (1.0-gradient_mask);
-	COLOR.rgb += recolor_top * gradient_mask;
+	// Mask the top of the grass with one color, mask the root with another, and add them
+	COLOR.rgb = recolor_top * gradient_mask;
+	COLOR.rgb += recolor_root * (1.0-gradient_mask);
 }
 
 void fragment() {
@@ -41,13 +47,13 @@ void fragment() {
 	ALBEDO = COLOR.rgb;
 	
 	// The margin will look awfull if you try to vertex-color it, so is better to process it here
-	vec4 grass_mask = texture(grass_texture, UV);
+	vec4 margin_mask = texture(grass_texture, UV);
 	if(enable_margin){
-		ALBEDO *= grass_mask.rgb;
-		ALBEDO += color_margin * (1.0-grass_mask.rgb);
+		ALBEDO *= margin_mask.rgb;
+		ALBEDO += color_margin * (1.0-margin_mask.rgb);
 	}
 	
 	// TBH, i don't know why alpha must be multiplied or why it needs the threshold without glitching
-	ALPHA *= grass_mask.a;
+	ALPHA *= margin_mask.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.8;
 }
