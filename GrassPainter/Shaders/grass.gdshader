@@ -1,6 +1,6 @@
 shader_type spatial;
 render_mode unshaded, shadows_disabled;
-#include "res://Scripts/splash_grow.gdshaderinc"
+#include "res://Shaders/splash_grow.gdshaderinc"
 
 
 group_uniforms SetGrassProperties;
@@ -36,6 +36,7 @@ void vertex(){
 	vec3 recolor_root = texture(color_root_map, world_position).rgb;
 	float gradient_mask = texture(mask_front, UV).r;
 	
+	// Animate on click from PaintSurface script
 	recolor_root = grow_splash(world_position, recolor_root);
 	
 	// Mask the top of the grass with one color, mask the root with another, and add them

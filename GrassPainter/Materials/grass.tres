@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=10 format=3 uid="uid://bpya5hrmik52v"]
 
-[ext_resource type="Shader" path="res://scripts/grass.gdshader" id="1_5pba3"]
+[ext_resource type="Shader" path="res://Shaders/grass.gdshader" id="1_5pba3"]
 [ext_resource type="Texture2D" uid="uid://d2kgq7kogm4s4" path="res://Images/base_texture.png" id="2_lk1k7"]
 [ext_resource type="Texture2D" uid="uid://bs4ojwqd1sslv" path="res://Images/grass_texture.png" id="3_xn5o2"]
 [ext_resource type="Texture2D" uid="uid://rump6jx00yui" path="res://Images/splash_gradient.png" id="4_gn54o"]
@@ -20,12 +20,13 @@ color_ramp = SubResource("Gradient_0pwqs")
 noise = SubResource("FastNoiseLite_v2yj1")
 
 [sub_resource type="Gradient" id="Gradient_vhnkb"]
-colors = PackedColorArray(0.685835, 0.685835, 0.685835, 1, 1, 1, 1, 1)
+offsets = PackedFloat32Array(0, 0.198276, 0.456897)
+colors = PackedColorArray(0, 0, 0, 1, 0.534361, 0.534361, 0.534361, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_0gkox"]
 gradient = SubResource("Gradient_vhnkb")
 fill_from = Vector2(0, 1)
-fill_to = Vector2(0, 0.740854)
+fill_to = Vector2(0, 0)
 
 [resource]
 render_priority = 0

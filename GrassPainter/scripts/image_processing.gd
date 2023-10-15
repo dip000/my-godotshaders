@@ -1,12 +1,10 @@
 # SHADER LOGIC
-# This script will call the shader to play the splash animation
-# At the end of animation, it will bake the last frame into the base texture so the shader doesn't need to keep inifinite splashes drawn
-# Then again, a shader might as well not even be needed since you can use an AnimatedSprite3D or something
+# This script will call all shaders to play the splash animation
 extends MeshInstance3D
 class_name PaintSurface
 
-@onready var _grass_mat:ShaderMaterial = $"../MultiMeshInstance3D".multimesh.mesh.surface_get_material(0)
-@onready var _grass_mat_small:ShaderMaterial = $"../MultiMeshInstance3DSmall".multimesh.mesh.surface_get_material(0)
+@onready var _grass_mat:ShaderMaterial = $grass.multimesh.mesh.surface_get_material(0)
+@onready var _grass_mat_small:ShaderMaterial = $grass_small.multimesh.mesh.surface_get_material(0)
 @onready var _surface_mat:ShaderMaterial = get_active_material(0)
 
 var base_texture:ImageTexture

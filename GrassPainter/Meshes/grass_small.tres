@@ -1,6 +1,6 @@
 [gd_resource type="QuadMesh" load_steps=11 format=3 uid="uid://blcwemantxp1q"]
 
-[ext_resource type="Shader" path="res://scripts/grass.gdshader" id="1_s8nom"]
+[ext_resource type="Shader" path="res://Shaders/grass.gdshader" id="1_s8nom"]
 [ext_resource type="Texture2D" uid="uid://d2kgq7kogm4s4" path="res://Images/base_texture.png" id="2_7nh3y"]
 [ext_resource type="Texture2D" uid="uid://bvid0x0pyktow" path="res://Images/grass_small_texture.png" id="3_ka4cr"]
 [ext_resource type="Texture2D" uid="uid://rump6jx00yui" path="res://Images/splash_gradient.png" id="4_6ea23"]

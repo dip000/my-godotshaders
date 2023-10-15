@@ -12,8 +12,10 @@ config_version=5
 
 config/name="GrassPainter"
 config/tags=PackedStringArray("godotshaders.com")
+run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.807843, 0.670588, 0.576471, 1)
+boot_splash/show_image=false
 
 [rendering]
 

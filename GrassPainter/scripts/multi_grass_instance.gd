@@ -1,5 +1,5 @@
 @tool
-extends Node3D
+extends Node
 class_name MultyGrassInstancer
 
 # Controls
@@ -12,7 +12,7 @@ class_name MultyGrassInstancer
 @export var variants:Array[GrassVariantInfo] ## Place all grass meshes you want to instance
 
 var _terrain_image:Image = preload("res://Images/base_texture.png").get_image()
-const BATCH_PROCESS_FRAMES:int = 50 # Set higher if you have a better computer :D
+const BATCH_PROCESS_FRAMES:int = 100 # Set higher if you have a better computer :D
 
 
 func _reset(_value):
