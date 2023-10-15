@@ -56,7 +56,7 @@ func _populate(_value):
 			var z:float = randf()
 			
 			# The grass will only spawn where the terrain's texture has "spawn_color"
-			if can_spawn_color_at(variant.spawn_color, x, z):
+			if int(can_spawn_color_at(variant.spawn_color, x, z)) ^ int(variant.any_but_color): # xor keyword doesn't exist :P
 				var pos := Vector3(x*terrain_size.x, 0, z*terrain_size.y)
 				var transf := Transform3D(Basis(), Vector3()).translated( pos )
 				transforms.append( transf )
