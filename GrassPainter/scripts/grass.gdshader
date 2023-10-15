@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode unshaded, shadows_disabled;
 #include "res://Scripts/splash_grow.gdshaderinc"
 
+
 group_uniforms SetGrassProperties;
 uniform bool bilboard_y;
 uniform bool enable_margin;
