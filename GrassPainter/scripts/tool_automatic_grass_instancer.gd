@@ -9,12 +9,12 @@ class_name AutomaticGrassInstancer
 
 @export_group("Setup")
 @export var terrain:MeshInstance3D ## Must have a PlaneMesh with 'paint_surface.gdshader' as ShaderMaterial
-@export var variants:Array[GrassVariantInfo] ## Place all grass meshes you want to instance
+@export var variants:Array[GrassVariant] ## Place all grass meshes you want to instance
 @export var height:Texture2D
 @export var grass_spawn:Texture2D
+@export var grass_mat:ShaderMaterial
 
-const BATCH_PROCESS_FRAMES:int = 1000000 # Set higher if you have a better computer :D
-const _GRASS_MESH:Mesh = preload("res://Meshes/grass.tres")
+const BATCH_PROCESS_FRAMES:int = 100 # Set higher if you have a better computer :D
 
 
 func _reset(_value):
@@ -41,14 +41,20 @@ func _populate(_value):
 	var terrain_size_px:Vector2i = terrain_image.get_size()
 	var height_image:Image = height.get_image()
 	
+	var grass_mesh := QuadMesh.new()
+	grass_mesh.size = Vector2(0.3, 0.3)
+	grass_mesh.subdivide_depth = 5
+	grass_mesh.center_offset.y += 0.15
+	grass_mesh.material = grass_mat
+	
 	for variant_index in variants.size():
-		var variant:GrassVariantInfo = variants[variant_index]
+		var variant:GrassVariant = variants[variant_index]
 		
 		# Create node
 		var multimesh_inst = MultiMeshInstance3D.new()
 		terrain.add_child( multimesh_inst )
 		multimesh_inst.set_owner(owner)
-		multimesh_inst.name = _GRASS_MESH.resource_name
+		multimesh_inst.name = "Grass" + str(variant_index)
 		
 		# Align with terrain
 		multimesh_inst.position.x -= terrain_size_m.x*0.5
@@ -68,7 +74,7 @@ func _populate(_value):
 			# The grass will only spawn where the terrain's texture is WHITE
 			if can_spawn_at(terrain_image, x_px, z_px):
 				var y:float = height_image.get_pixel(x_px, z_px).r
-				var pos := Vector3(x_m, y*0.3, z_m)
+				var pos := Vector3(x_m, y*0.4, z_m)
 				var transf := Transform3D(Basis(), Vector3()).translated( pos )
 				transforms.append( transf )
 		
@@ -76,7 +82,7 @@ func _populate(_value):
 		multimesh_inst.multimesh =  MultiMesh.new()
 		multimesh_inst.multimesh.transform_format = MultiMesh.TRANSFORM_3D
 		multimesh_inst.multimesh.instance_count = transforms.size()
-		multimesh_inst.multimesh.mesh = _GRASS_MESH
+		multimesh_inst.multimesh.mesh = grass_mesh
 		multimesh_inst.set_instance_shader_parameter("variant_index", variant_index)
 		
 		# Create the actual grass

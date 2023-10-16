@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://ctxvmnujhpeb2"]
+
+[ext_resource type="Shader" path="res://addons/terra_brush/shaders/terrain.gdshader" id="1_qx305"]
+[ext_resource type="Texture2D" uid="uid://bc03njqi82w58" path="res://addons/terra_brush/textures/default_brush.tres" id="2_7ua5g"]
+
+[resource]
+resource_name = "terrain"
+render_priority = 0
+shader = ExtResource("1_qx305")
+shader_parameter/splash_position = Vector2(0.5, 0.5)
+shader_parameter/splash_scale = 1.0
+shader_parameter/splash_color = Color(0, 0, 0, 1)
+shader_parameter/reveal_factor = 0.0
+shader_parameter/splash_texture = ExtResource("2_7ua5g")
