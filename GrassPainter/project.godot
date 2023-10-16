@@ -17,6 +17,10 @@ config/features=PackedStringArray("4.1", "GL Compatibility")
 boot_splash/bg_color=Color(0.807843, 0.670588, 0.576471, 1)
 boot_splash/show_image=false
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/terra_grass/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="mobile"

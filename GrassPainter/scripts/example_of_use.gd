@@ -5,7 +5,7 @@ extends Node3D
 
 @export var splash_colors:Array[Color] ## Use alpha to blend with paint surface 
 @onready var cam:Camera3D = $Camera3D
-@onready var paint_surface:PaintSurface = $Ground
+@onready var paint_surface:TGTerrain = $Ground
 @onready var space_state:PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 
 const INTERACT_RADIUS:int = 15

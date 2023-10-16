@@ -2,6 +2,8 @@ shader_type spatial;
 render_mode unshaded, shadows_disabled;
 #include "res://Shaders/splash_grow.gdshaderinc"
 
+const float GROUND_RESIZE = 0.5;
+const int TOTAL_GRASS_VARIANTS = 4;
 
 group_uniforms SetGrassProperties;
 uniform bool bilboard_y;
@@ -9,15 +11,16 @@ uniform bool enable_margin;
 uniform vec3 color_margin:source_color;
 
 // Colors of all of the grass instanced from a MultiMesh as seen from the top
-uniform sampler2D color_top_map:source_color,filter_linear_mipmap,repeat_disable;
-uniform sampler2D color_root_map:source_color,filter_linear_mipmap,repeat_disable;
+uniform sampler2D grass_color:source_color,filter_linear_mipmap,repeat_disable;
+uniform sampler2D terrain_color:source_color,filter_linear_mipmap,repeat_disable;
 
 // This must be in gray scale. Usually a GradientTexture2D but can be anything you want, even empty for plain color
 uniform sampler2D mask_front:source_color,filter_linear_mipmap,repeat_disable,hint_default_black;
-uniform sampler2D grass_texture;
+uniform sampler2D grass_variants[TOTAL_GRASS_VARIANTS];
 group_uniforms;
 
-const float GROUND_RESIZE = 0.5;
+instance uniform int variant_index;
+
 
 
 void vertex(){
@@ -32,11 +35,11 @@ void vertex(){
 	vec2 world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz * GROUND_RESIZE;
 	
 	// Coloring the mesh vertices will look exactly the same as coloring the pixels but more performant (asuming there are enough subdivisions along z-axis)
-	vec3 recolor_top = texture(color_top_map, world_position).rgb;
-	vec3 recolor_root = texture(color_root_map, world_position).rgb;
+	vec3 recolor_top = texture(grass_color, world_position).rgb;
+	vec3 recolor_root = texture(terrain_color, world_position).rgb;
 	float gradient_mask = texture(mask_front, UV).r;
 	
-	// Animate on click from PaintSurface script
+	// Animate on click from TGTerrain script
 	recolor_root = grow_splash(world_position, recolor_root);
 	
 	// Mask the top of the grass with one color, mask the root with another, and add them
@@ -49,7 +52,7 @@ void fragment() {
 	ALBEDO = COLOR.rgb;
 	
 	// The margin will look awfull if you try to vertex-color it, so is better to process it here
-	vec4 margin_mask = texture(grass_texture, UV);
+	vec4 margin_mask = texture(grass_variants[variant_index], UV);
 	if(enable_margin){
 		ALBEDO *= margin_mask.rgb;
 		ALBEDO += color_margin * (1.0-margin_mask.rgb);

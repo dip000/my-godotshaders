@@ -1,24 +1,18 @@
 # SHADER LOGIC
 # This script will call all shaders to play the splash animation
 extends MeshInstance3D
-class_name PaintSurface
+class_name TGTerrain
 
 @onready var _grass_mat:ShaderMaterial = $grass.multimesh.mesh.surface_get_material(0)
-@onready var _grass_mat_small:ShaderMaterial = $grass_small.multimesh.mesh.surface_get_material(0)
+@onready var _grass_mat_small:ShaderMaterial = $grass2.multimesh.mesh.surface_get_material(0)
 @onready var _surface_mat:ShaderMaterial = get_active_material(0)
 
-var base_texture:ImageTexture
 var splash_end_mask_image:Image = preload("res://Images/splash_end_mask.png")
 
 const SIZE:Vector2 = Vector2(512, 512)
 const HALF_SIZE:Vector2 = SIZE/2
 const FULL_RECT:Rect2i = Rect2i(Vector2i.ZERO, SIZE)
 
-
-func _ready():
-	# 'CompressedTexture2D' is not versatile at all, recreate it as 'ImageTexture'
-	var base_texture_compressed:CompressedTexture2D = preload("res://Images/base_texture.png")
-	base_texture = ImageTexture.create_from_image( base_texture_compressed.get_image() )
 
 func splash_at(splash_position:Vector2, slplash_scale:float, slplash_color:Color, splash_duration:float=2.0):
 	_set_all("splash_position", splash_position)
@@ -33,7 +27,7 @@ func splash_at(splash_position:Vector2, slplash_scale:float, slplash_color:Color
 	# If it lags baking the texture, consider pre-baking it inside a Thread
 	_bake_splash_into_base_texture(splash_position, slplash_scale, slplash_color)
 	_set_all("reveal_factor", 0)
-	_set_all("color_root_map", base_texture)
+	_set_all("terrain_color", _surface_mat.get_shader_parameter("terrain_color"))
 
 
 func _set_reveal_factor(value:float):
@@ -57,6 +51,7 @@ func _bake_splash_into_base_texture(pos:Vector2, scal:float, color:Color):
 	splash_mask_img.resize( size.x, size.y )
 	
 	# Draws the last frame of the splash animation on top of 'base_texture'
+	var base_texture:Texture2D = _surface_mat.get_shader_parameter("terrain_color")
 	var base_img:Image = base_texture.get_image()
 	base_img.blend_rect_mask( splash_color_img, splash_mask_img, FULL_RECT, pos)
 	base_texture.update( base_img )

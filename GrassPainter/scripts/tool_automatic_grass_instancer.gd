@@ -10,9 +10,11 @@ class_name AutomaticGrassInstancer
 @export_group("Setup")
 @export var terrain:MeshInstance3D ## Must have a PlaneMesh with 'paint_surface.gdshader' as ShaderMaterial
 @export var variants:Array[GrassVariantInfo] ## Place all grass meshes you want to instance
+@export var height:Texture2D
+@export var grass_spawn:Texture2D
 
-var _terrain_image:Image = preload("res://Images/base_texture.png").get_image()
-const BATCH_PROCESS_FRAMES:int = 100 # Set higher if you have a better computer :D
+const BATCH_PROCESS_FRAMES:int = 1000000 # Set higher if you have a better computer :D
+const _GRASS_MESH:Mesh = preload("res://Meshes/grass.tres")
 
 
 func _reset(_value):
@@ -34,30 +36,39 @@ func _populate(_value):
 	# Track visual progress
 	populate = true
 	progress = "0%"
-	var terrain_size:Vector2 = terrain.mesh.size
+	var terrain_image:Image = grass_spawn.get_image()
+	var terrain_size_m:Vector2 = terrain.mesh.size
+	var terrain_size_px:Vector2i = terrain_image.get_size()
+	var height_image:Image = height.get_image()
 	
-	for variant in variants:
+	for variant_index in variants.size():
+		var variant:GrassVariantInfo = variants[variant_index]
+		
 		# Create node
 		var multimesh_inst = MultiMeshInstance3D.new()
 		terrain.add_child( multimesh_inst )
 		multimesh_inst.set_owner(owner)
-		multimesh_inst.name = variant.mesh.resource_name
+		multimesh_inst.name = _GRASS_MESH.resource_name
 		
 		# Align with terrain
-		multimesh_inst.position.x -= terrain_size.x*0.5
-		multimesh_inst.position.z -= terrain_size.y*0.5
+		multimesh_inst.position.x -= terrain_size_m.x*0.5
+		multimesh_inst.position.z -= terrain_size_m.y*0.5
 		
 		# We need to find all actual valid places first
 		var transforms:Array[Transform3D] = []
 		for current_instance in variant.instance_count:
-			
 			await process_batch_frame(current_instance, variant.instance_count)
 			var x:float = randf()
 			var z:float = randf()
+			var x_px:int = floori(x*terrain_size_px.x)
+			var z_px:int = floori(z*terrain_size_px.y)
+			var x_m:float = x*terrain_size_m.x
+			var z_m:float = z*terrain_size_m.y
 			
-			# The grass will only spawn where the terrain's texture has "spawn_color"
-			if int(can_spawn_color_at(variant.spawn_color, x, z)) ^ int(variant.any_but_color): # xor keyword doesn't exist :P
-				var pos := Vector3(x*terrain_size.x, 0, z*terrain_size.y)
+			# The grass will only spawn where the terrain's texture is WHITE
+			if can_spawn_at(terrain_image, x_px, z_px):
+				var y:float = height_image.get_pixel(x_px, z_px).r
+				var pos := Vector3(x_m, y*0.3, z_m)
 				var transf := Transform3D(Basis(), Vector3()).translated( pos )
 				transforms.append( transf )
 		
@@ -65,7 +76,8 @@ func _populate(_value):
 		multimesh_inst.multimesh =  MultiMesh.new()
 		multimesh_inst.multimesh.transform_format = MultiMesh.TRANSFORM_3D
 		multimesh_inst.multimesh.instance_count = transforms.size()
-		multimesh_inst.multimesh.mesh = variant.mesh
+		multimesh_inst.multimesh.mesh = _GRASS_MESH
+		multimesh_inst.set_instance_shader_parameter("variant_index", variant_index)
 		
 		# Create the actual grass
 		for instance_index in transforms.size():
@@ -81,11 +93,10 @@ func process_batch_frame(index:int, total:int):
 		progress = str(int(100.0*index/total)) + "%"
 		await get_tree().process_frame
 
-func can_spawn_color_at(spawn_color:Color, x:float, z:float) -> bool:
-	x = floori(x*_terrain_image.get_width())
-	z = floori(z*_terrain_image.get_height())
-	var image_color:Color = _terrain_image.get_pixel( int(x), int(z) )
-	return image_color.is_equal_approx( spawn_color )
+func can_spawn_at(terrain_image:Image, x:int, z:int) -> bool:
+#	_terrain_image.fill(Color.WHITE)
+	var image_color:Color = terrain_image.get_pixel(x, z)
+	return image_color.is_equal_approx( Color.WHITE )
 
 
 func _input_errors() -> Array[String]:
