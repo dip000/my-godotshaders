@@ -3,7 +3,6 @@ render_mode unshaded, shadows_disabled;
 #include "res://addons/terra_brush/shaders/brush_overlay.gdshaderinc"
 
 const float GROUND_RESIZE = 0.5;
-const int TOTAL_GRASS_VARIANTS = 4;
 
 uniform bool bilboard_y;
 uniform bool enable_margin;
@@ -15,10 +14,7 @@ uniform sampler2D terrain_color:source_color,filter_linear_mipmap,repeat_disable
 
 // This must be in gray scale. Usually a GradientTexture2D but can be anything you want, even empty for plain color
 uniform sampler2D mask_front:source_color,filter_linear_mipmap,repeat_disable,hint_default_black;
-uniform sampler2D grass_variants[TOTAL_GRASS_VARIANTS];
-
-instance uniform int variant_index;
-
+uniform sampler2D grass_variant;
 
 
 void vertex(){
@@ -50,7 +46,7 @@ void fragment() {
 	ALBEDO = COLOR.rgb;
 	
 	// The margin will look awfull if you try to vertex-color it, so is better to process it here
-	vec4 margin_mask = texture(grass_variants[variant_index], UV);
+	vec4 margin_mask = texture(grass_variant, UV);
 	if(enable_margin){
 		ALBEDO = mix(color_margin, ALBEDO, margin_mask.r);
 	}
