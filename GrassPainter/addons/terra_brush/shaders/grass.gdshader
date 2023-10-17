@@ -1,11 +1,10 @@
 shader_type spatial;
 render_mode unshaded, shadows_disabled;
-#include "res://addons/terra_brush/shaders/common.gdshaderinc"
+#include "res://addons/terra_brush/shaders/brush_overlay.gdshaderinc"
 
 const float GROUND_RESIZE = 0.5;
 const int TOTAL_GRASS_VARIANTS = 4;
 
-group_uniforms SetGrassProperties;
 uniform bool bilboard_y;
 uniform bool enable_margin;
 uniform vec3 color_margin:source_color;
@@ -17,7 +16,6 @@ uniform sampler2D terrain_color:source_color,filter_linear_mipmap,repeat_disable
 // This must be in gray scale. Usually a GradientTexture2D but can be anything you want, even empty for plain color
 uniform sampler2D mask_front:source_color,filter_linear_mipmap,repeat_disable,hint_default_black;
 uniform sampler2D grass_variants[TOTAL_GRASS_VARIANTS];
-group_uniforms;
 
 instance uniform int variant_index;
 
@@ -40,7 +38,7 @@ void vertex(){
 	float gradient_mask = texture(mask_front, UV).r;
 	
 	// Animate on click from TGTerrain script
-	recolor_root = grow_splash(world_position, recolor_root);
+	recolor_root = draw_brush(world_position, recolor_root);
 	
 	// Mask the top of the grass with one color, mask the root with another, and add them
 	COLOR.rgb = recolor_top * gradient_mask;

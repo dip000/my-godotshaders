@@ -15,6 +15,7 @@ class_name AutomaticGrassInstancer
 @export var grass_mat:ShaderMaterial
 
 const BATCH_PROCESS_FRAMES:int = 100 # Set higher if you have a better computer :D
+const HEIGHT_STRENGTH:float = 0.95 # Grass in slopes might look like they're floating at full strenght
 
 
 func _reset(_value):
@@ -74,7 +75,7 @@ func _populate(_value):
 			# The grass will only spawn where the terrain's texture is WHITE
 			if can_spawn_at(terrain_image, x_px, z_px):
 				var y:float = height_image.get_pixel(x_px, z_px).r
-				var pos := Vector3(x_m, y*0.4, z_m)
+				var pos := Vector3(x_m, y*HEIGHT_STRENGTH, z_m)
 				var transf := Transform3D(Basis(), Vector3()).translated( pos )
 				transforms.append( transf )
 		
