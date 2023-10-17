@@ -6,7 +6,7 @@ signal on_active()
 
 
 ## Check to draw with this brush. Note that this will unckeck every other brush so only one can be active at a time
-@export var active:bool:
+@export var active:bool=false:
 	set(v):
 		if v:
 			on_active.emit()
