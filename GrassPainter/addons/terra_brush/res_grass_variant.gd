@@ -1,5 +1,5 @@
 extends Resource
-class_name GrassVariant
+class_name TGrassVariant
 
 ## The grass variant texture to render.
 ## This will be appended to the grass shader.

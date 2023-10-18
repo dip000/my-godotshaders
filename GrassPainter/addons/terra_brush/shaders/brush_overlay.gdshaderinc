@@ -11,15 +11,15 @@ vec2 scale_from_center(vec2 uv, float s){
 }
 
 vec3 draw_brush(vec2 uv, vec3 surface){
-	vec2 uv_transformed_outer_line = scale_from_center( uv - brush_position + 0.5, brush_scale+0.05 );
-	float brush_pixel_outer_line = texture( brush_texture, uv_transformed_outer_line ).r;
+	vec2 uv_transformed_outer_line = scale_from_center( uv - brush_position + 0.5, brush_scale+0.02 );
+	vec4 brush_pixel_outer_line = texture( brush_texture, uv_transformed_outer_line );
 	
 	vec2 uv_transformed = scale_from_center( uv - brush_position + 0.5, brush_scale );
-	float brush_pixel = texture( brush_texture, uv_transformed ).r;
+	vec4 brush_pixel = texture( brush_texture, uv_transformed );
 	
-	// ???
-	vec3 brush = mix(vec3(brush_pixel_outer_line), brush_color.rgb*brush_pixel, 0.9 + 0.1*sin(TIME*3.0));
+	// Brush with black ring
+	vec3 brush = brush_color.rgb*brush_pixel.rgb*0.9 + 0.1*sin(TIME*4.0);
 	
 	// Alpha blend
-	return mix(surface, brush, brush_pixel_outer_line);
+	return mix(surface, brush, brush_pixel_outer_line.a);
 }

@@ -4,7 +4,7 @@
 interpolation_mode = 1
 interpolation_color_space = 2
 offsets = PackedFloat32Array(0, 0.664179)
-colors = PackedColorArray(1, 1, 1, 0.00392157, 0, 0, 0, 0)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
 
 [resource]
 gradient = SubResource("Gradient_j3j8p")

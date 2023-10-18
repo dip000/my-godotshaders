@@ -12,10 +12,10 @@ func _exit_tree():
 
 
 func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
-	if instanced_tool:
+	if instanced_tool and event is InputEventMouse:
 		var root = get_tree().get_edited_scene_root()
 		var space = root.get_world_3d().direct_space_state
-		var mouse = root.get_viewport().get_mouse_position()
+		var mouse = event.get_position() #mouse position from viewport might not work properly. Use event's mouse position instead
 		var origin = cam.project_ray_origin(mouse)
 		var dir = cam.project_ray_normal(mouse)
 		var ray = PhysicsRayQueryParameters3D.create(origin, origin + dir * cam.far)
@@ -24,7 +24,7 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 		var result = space.intersect_ray(ray)
 		
 		if not result:
-			instanced_tool.exit_overlay()
+			instanced_tool.exit_terrain()
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 				return EditorPlugin.AFTER_GUI_INPUT_STOP
 			return EditorPlugin.AFTER_GUI_INPUT_PASS
@@ -38,14 +38,20 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 			
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP):
 			instanced_tool.scale(-10)
-			return EditorPlugin.AFTER_GUI_INPUT_STOP
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN):
 			instanced_tool.scale(10)
-			
+		
+		if event is InputEventMouseButton and event.is_released() and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
+			instanced_tool.paint_end()
+		
 		if event is InputEventMouseButton:
 			return EditorPlugin.AFTER_GUI_INPUT_STOP
 	
 	return EditorPlugin.AFTER_GUI_INPUT_PASS
+
+func _apply_changes():
+	if instanced_tool:
+		instanced_tool.save()
 
 func _handles(object):
 	if object is TerraBrush:
