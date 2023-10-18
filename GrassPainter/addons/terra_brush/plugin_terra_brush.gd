@@ -29,7 +29,7 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 				return EditorPlugin.AFTER_GUI_INPUT_STOP
 			return EditorPlugin.AFTER_GUI_INPUT_PASS
 		
-		instanced_tool.brush_overlay( result.position )
+		instanced_tool.over_terrain( result.position )
 		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			instanced_tool.paint(result.position, true)
@@ -40,9 +40,6 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 			instanced_tool.scale(-10)
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN):
 			instanced_tool.scale(10)
-		
-		if event is InputEventMouseButton and event.is_released() and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
-			instanced_tool.paint_end()
 		
 		if event is InputEventMouseButton:
 			return EditorPlugin.AFTER_GUI_INPUT_STOP
@@ -58,5 +55,4 @@ func _handles(object):
 		instanced_tool = object
 		return true
 	else:
-		instanced_tool = null
 		return false
