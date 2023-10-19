@@ -4,6 +4,7 @@ class_name TBrushGrassSpawn
 
 const BATCH_PROCESS_FRAMES:int = 50 # Set higher if you have a better computer :D
 const GRASS_MESH:Mesh = preload("res://addons/terra_brush/meshes/grass.tres")
+const TEXTURE:Texture2D = preload("res://addons/terra_brush/textures/grass_spawn.tres")
 
 enum SpawnType {SPAWN_ONE_VARIANT, SPAWN_RANDOM_VARIANTS}
 ## Action to perform while left-clicking over the terrain. Right click will clear grass
@@ -49,13 +50,11 @@ enum SpawnType {SPAWN_ONE_VARIANT, SPAWN_RANDOM_VARIANTS}
 		margin_color = v
 		_populate_grass()
 
-var _terrain_height:ImageTexture = preload("res://addons/terra_brush/textures/terrain_height.tres")
-
 
 func paint(scale:float, pos:Vector3, primary_action:bool):
 	if active:
 		if not surface_texture:
-			surface_texture = load("res://addons/terra_brush/textures/grass_spawn.tres")
+			surface_texture = TEXTURE
 		
 		# Spawn with primary key, erase with secondary
 		if primary_action:
@@ -74,9 +73,17 @@ func paint(scale:float, pos:Vector3, primary_action:bool):
 
 
 func _populate_grass():
+	if not terrain:
+		return
+	
+	if variants.is_empty():
+		push_warning("Please add a grass variant under 'Shader Properties'")
+		return
+	
 	# Caches
+	var rng:RandomNumberGenerator = terrain.rng
 	var terrain_image:Image = surface_texture.get_image()
-	var height_image:Image = _terrain_height.get_image()
+	var height_image:Image = TBrushTerrainHeight.TEXTURE.get_image()
 	var terrain_size_m:Vector2 = terrain.mesh.size
 	var terrain_size_px:Vector2i = terrain_image.get_size()
 	var total_variants:int = variants.size()
@@ -115,7 +122,7 @@ func _populate_grass():
 	TerraBrush.GRASS.set_shader_parameter("color_margin", margin_color)
 	TerraBrush.GRASS.set_shader_parameter("grass_variants", variants)
 	
-	TerraBrush._rng.set_state(TerraBrush._rng_state)
+	rng.set_state(terrain.rng_state)
 	
 	# Find all actual valid places to spawn
 	var transforms_variants:Array[Array]
@@ -123,14 +130,14 @@ func _populate_grass():
 	
 	for current_instance in density:
 		# Get pixel value in random position
-		var x:float = TerraBrush._rng.randf()
-		var z:float = TerraBrush._rng.randf()
+		var x:float = rng.randf()
+		var z:float = rng.randf()
 		var x_px:int = floori(x*terrain_size_px.x)
 		var z_px:int = floori(z*terrain_size_px.y)
 		var terrain_value:float = terrain_image.get_pixel(x_px, z_px).r
 		
 		# WHITE = SPAWN_RANDOM_VARIANTS (always calculate to ensure full state restoration from RandomNumberGenerator)
-		var variant_index:int = TerraBrush._rng.randi_range(0, max_index)
+		var variant_index:int = rng.randi_range(0, max_index)
 		
 		# BLACK = CLEAR
 		if is_zero_approx(terrain_value):

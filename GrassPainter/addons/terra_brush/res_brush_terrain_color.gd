@@ -2,6 +2,9 @@
 extends TBrush
 class_name TBrushTerrainColor
 
+const TEXTURE:Texture2D = preload("res://addons/terra_brush/textures/terrain_color.tres")
+
+
 ## Modulates the brush texture. Use alpha to set the stroke strenght
 ## Modifying this will set it as the active brush
 @export var color:Color = Color.WHITE:

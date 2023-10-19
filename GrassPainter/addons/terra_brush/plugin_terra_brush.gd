@@ -5,7 +5,7 @@ var instanced_tool:TerraBrush
 
 
 func _enter_tree():
-	add_custom_type("TerraBrush", "Node", preload("tool_terra_brush.gd"), preload("icon.svg"))
+	add_custom_type("TerraBrush", "MeshInstance3D", preload("tool_terra_brush.gd"), preload("icon.svg"))
 
 func _exit_tree():
 	remove_custom_type("TerraBrush")
@@ -19,8 +19,6 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 		var origin = cam.project_ray_origin(mouse)
 		var dir = cam.project_ray_normal(mouse)
 		var ray = PhysicsRayQueryParameters3D.create(origin, origin + dir * cam.far)
-		
-		ray.collide_with_areas = true
 		var result = space.intersect_ray(ray)
 		
 		if not result:

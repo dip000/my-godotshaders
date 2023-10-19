@@ -2,6 +2,7 @@
 extends TBrush
 class_name TBrushTerrainHeight
 
+const TEXTURE:Texture2D = preload("res://addons/terra_brush/textures/terrain_height.tres")
 const HEIGHT_STRENGTH:float = 0.95 # Grass in slopes might look like they're floating at full strenght
 
 
@@ -15,7 +16,7 @@ const HEIGHT_STRENGTH:float = 0.95 # Grass in slopes might look like they're flo
 func paint(scale:float, pos:Vector3, primary_action:bool):
 	if active:
 		if not surface_texture:
-			surface_texture = load("res://addons/terra_brush/textures/terrain_height.tres")
+			surface_texture = TEXTURE
 		
 		# Mountains with primary key, ridges with secondary
 		t_color = Color(1,1,1,strength*0.001) if primary_action else Color(0,0,0,strength*0.005)
@@ -34,7 +35,7 @@ func _populate_grass():
 	for child in terrain.get_children():
 		if not child is MultiMeshInstance3D:
 			continue
-			
+		
 		var multimesh_instance:MultiMeshInstance3D = child
 		for instance_index in multimesh_instance.multimesh.instance_count:
 			var transform:Transform3D = multimesh_instance.multimesh.get_instance_transform(instance_index)

@@ -28,8 +28,10 @@ var terrain:MeshInstance3D
 func paint(_scale:float, _pos:Vector3, _primary_action:bool):
 	pass
 
-
 func _bake_brush_into_surface(scale:float, pos:Vector3):
+	if not terrain:
+		return
+	
 	# Transforms
 	var size:Vector2i = SURFACE_SIZE * scale #size in pixels
 	var pos_absolute:Vector2 = Vector2(pos.x, pos.z)/terrain.mesh.size #in [0,1] range
