@@ -53,6 +53,7 @@ func _apply_changes():
 func _handles(object):
 	if object is TerraBrush:
 		instanced_tool = object
+		instanced_tool.scene_active()
 		return true
 	else:
 		return false

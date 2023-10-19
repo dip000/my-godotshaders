@@ -21,7 +21,6 @@ const TERRAIN:ShaderMaterial = preload("res://addons/terra_brush/materials/terra
 const BRUSH_MASK:Texture2D = preload("res://addons/terra_brush/textures/default_brush.tres")
 
 var _active_brush:TBrush
-var _populating:bool
 static var _rng := RandomNumberGenerator.new()
 static var _rng_state:int
 
@@ -63,15 +62,19 @@ func scale(value:float):
 		terrain_material.set_shader_parameter("brush_scale", brush_scale/100.0)
 
 func save():
-	pass
-#	for brush in [grass_color, terrain_color, terrain_height, grass_spawn]:
-#		if brush.surface_texture and brush.texture_updated:
-#			ResourceSaver.save(brush.surface_texture)
+	# Might take a bit to save
+	for brush in [grass_color, terrain_color, terrain_height, grass_spawn]:
+		if brush.surface_texture and brush.texture_updated:
+			ResourceSaver.save(brush.surface_texture)
+			print("Saved texture: ", brush.surface_texture.resource_name)
+			brush.texture_updated = false
+			await get_tree().process_frame
 
 func paint(pos:Vector3, primary_action:bool):
 	if _active_brush:
-		_active_brush.paint(terrain, brush_scale/100.0, pos, primary_action)
+		_active_brush.terrain = terrain
+		_active_brush.paint(brush_scale/100.0, pos, primary_action)
 
-func paint_end():
-	pass
-
+func scene_active():
+	if _active_brush:
+		_active_brush.terrain = terrain

@@ -18,7 +18,7 @@ vec3 draw_brush(vec2 uv, vec3 surface){
 	vec4 brush_pixel = texture( brush_texture, uv_transformed );
 	
 	// Brush with black ring
-	vec3 brush = brush_color.rgb*brush_pixel.rgb*0.9 + 0.1*sin(TIME*4.0);
+	vec3 brush = brush_color.rgb*brush_pixel.rgb*0.8 + 0.05*sin(TIME*4.0) + 0.15;
 	
 	// Alpha blend
 	return mix(surface, brush, brush_pixel_outer_line.a);
