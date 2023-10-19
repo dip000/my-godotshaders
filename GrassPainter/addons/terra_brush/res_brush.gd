@@ -13,7 +13,7 @@ const SURFACE_FULL_RECT:Rect2i = Rect2i(Vector2i.ZERO, SURFACE_SIZE)
 ## Check to draw with this brush. Note that this will unckeck every other brush so only one can be active at a time
 @export var active:bool=false:
 	set(v):
-		if v: on_active.emit()
+		if v: on_active.emit() #ok i admit this is a hack. But sould work as long as no one calls active=true from outside
 		active = v
 
 @export_group("Advanced")

@@ -73,7 +73,7 @@ func paint(scale:float, pos:Vector3, primary_action:bool):
 
 
 func _populate_grass():
-	if not terrain:
+	if not terrain or not surface_texture:
 		return
 	
 	if variants.is_empty():

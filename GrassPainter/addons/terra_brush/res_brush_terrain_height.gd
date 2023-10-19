@@ -24,7 +24,6 @@ func paint(scale:float, pos:Vector3, primary_action:bool):
 		_bake_brush_into_surface(scale, pos)
 		_populate_grass()
 
-
 func _populate_grass():
 	# Caches
 	var height_image:Image = surface_texture.get_image()
@@ -49,4 +48,16 @@ func _populate_grass():
 			var y_m:float = height_image.get_pixel(x_px, z_px).r * HEIGHT_STRENGTH
 			transform.origin = Vector3(position.x, y_m, position.z)
 			multimesh_instance.multimesh.set_instance_transform(instance_index , transform)
-
+	
+	# Update terrain collider
+	for w in terrain.height_shape.map_width:
+		for h in terrain.height_shape.map_depth:
+			# Convert to range [0,1] then to pixel size
+			var x_px:int = (w / terrain_size_m.x) * (terrain_size_px.x-1)
+			var z_px:int = (h / terrain_size_m.y) * (terrain_size_px.y-1)
+			
+			# Update the new height with that texture pixel
+			var y_m:float = height_image.get_pixel(x_px, z_px).r * HEIGHT_STRENGTH
+			var i:int = h*(terrain_size_m.x+1) + w
+			terrain.height_shape.map_data[i] = y_m
+		

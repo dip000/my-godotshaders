@@ -23,6 +23,7 @@ const BRUSH_MASK:Texture2D = preload("res://addons/terra_brush/textures/default_
 var _active_brush:TBrush
 var rng := RandomNumberGenerator.new()
 var rng_state:int
+var height_shape:HeightMapShape3D
 
 
 func _ready():
@@ -36,6 +37,9 @@ func _ready():
 		brush.on_active.connect(_deactivate_brushes.bind(brush))
 		brush.terrain = self
 	
+	_setup()
+
+func _setup():
 	mesh = TERRAIN_MESH
 	
 	if has_node("Body"):
@@ -47,13 +51,15 @@ func _ready():
 	static_body.owner = owner
 	static_body.name = "Body"
 	
-	var shape := CollisionShape3D.new()
-	static_body.add_child(shape)
-	shape.owner = owner
-	shape.name = "Collider"
-	shape.shape = HeightMapShape3D.new()
-	shape.shape.map_depth = 3
-	shape.shape.map_width = 3
+	var collider := CollisionShape3D.new()
+	static_body.add_child(collider)
+	collider.owner = owner
+	collider.name = "Collider"
+	
+	height_shape = HeightMapShape3D.new()
+	height_shape.map_depth = 3
+	height_shape.map_width = 3
+	collider.shape = height_shape
 	print("Terrain setted up")
 	
 
