@@ -1,14 +1,15 @@
 ## TERRA BRUSH: Tool for terraforming and coloring grass
 # 1. Instantiate a TerraBrush node in scene tree and select it
 # 2. Set up the terrain and grass shader properties from the inspector
-# 3. Select a color if it is a color brush, ignore the color if is a terrain brush
-# 4. Hover over your terrain and left-click-and-drag to draw a stroke
+# 3. Activate the brush you want from the inspector
+# 4. Hover over your terrain and left-click-and-drag to start terra-brushing!
 
 @tool
 extends MeshInstance3D
 class_name TerraBrush
 
-@export_range(5, 200, 5, "suffix:%") var brush_scale:float = 20
+@export_range(1, 150, 1, "suffix:%") var brush_scale:float = 20
+@export var map_size:Vector2i = Vector2i(5,5): set=_set_map_size
 
 @export var terrain_color := TBrushTerrainColor.new()
 @export var terrain_height := TBrushTerrainHeight.new()
@@ -19,11 +20,13 @@ const GRASS:ShaderMaterial = preload("res://addons/terra_brush/materials/grass.t
 const TERRAIN:ShaderMaterial = preload("res://addons/terra_brush/materials/terrain.tres")
 const TERRAIN_MESH:PlaneMesh = preload("res://addons/terra_brush/meshes/terrain.tres")
 const BRUSH_MASK:Texture2D = preload("res://addons/terra_brush/textures/default_brush.tres")
+const HEIGHT_COLLIDER_NAME := "Height"
+const BASE_COLLIDER_NAME := "Base"
+const BODY_NAME := "Body"
 
 var _active_brush:TBrush
 var rng := RandomNumberGenerator.new()
 var rng_state:int
-var height_shape:HeightMapShape3D
 
 
 func _ready():
@@ -42,26 +45,49 @@ func _ready():
 func _setup():
 	mesh = TERRAIN_MESH
 	
-	if has_node("Body"):
+	if has_node(BODY_NAME):
 		return
 	await get_tree().process_frame
 	
 	var static_body := StaticBody3D.new()
 	add_child(static_body)
 	static_body.owner = owner
-	static_body.name = "Body"
+	static_body.name = BODY_NAME
 	
-	var collider := CollisionShape3D.new()
-	static_body.add_child(collider)
-	collider.owner = owner
-	collider.name = "Collider"
+	var height_collider := CollisionShape3D.new()
+	static_body.add_child(height_collider)
+	height_collider.owner = owner
+	height_collider.name = HEIGHT_COLLIDER_NAME
+	height_collider.shape = HeightMapShape3D.new()
 	
-	height_shape = HeightMapShape3D.new()
-	height_shape.map_depth = 3
-	height_shape.map_width = 3
-	collider.shape = height_shape
-	print("Terrain setted up")
+	var base_collider := CollisionShape3D.new()
+	static_body.add_child(base_collider)
+	base_collider.owner = owner
+	base_collider.name = BASE_COLLIDER_NAME
+	base_collider.shape = BoxShape3D.new()
 	
+	_set_map_size( Vector2i(10, 10) )
+
+func _set_map_size(size:Vector2i):
+	if not has_node(BODY_NAME):
+		return
+	print("Set map size")
+	
+	map_size = size
+	mesh.size = size
+	mesh.subdivide_width = size.x - 1
+	mesh.subdivide_depth = size.y - 1
+	
+	var body_shape:HeightMapShape3D = get_node( BODY_NAME.path_join(HEIGHT_COLLIDER_NAME) ).shape
+	body_shape.map_width = size.x + 1
+	body_shape.map_depth = size.y + 1
+	
+	var base_shape:BoxShape3D = get_node( BODY_NAME.path_join(BASE_COLLIDER_NAME) ).shape
+	base_shape.size = Vector3(size.x+0.5, 0.05, size.y+0.5) # Extra margin for responsivenes
+	
+	GRASS.set_shader_parameter("terrain_size", size)
+	terrain_height.update_terrain_collider()
+	grass_spawn.populate_grass()
 
 func _deactivate_brushes(caller_brush:TBrush):
 	for brush in [grass_color, terrain_color, terrain_height, grass_spawn]:
@@ -86,7 +112,7 @@ func exit_terrain():
 func scale(value:float):
 	if _active_brush:
 		var terrain_material:ShaderMaterial = mesh.surface_get_material(0)
-		brush_scale = clampf(brush_scale+value, 10, 200)
+		brush_scale = clampf(brush_scale+value, 1, 150)
 		terrain_material.set_shader_parameter("brush_scale", brush_scale/100.0)
 
 func save():

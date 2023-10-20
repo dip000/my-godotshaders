@@ -2,12 +2,12 @@ shader_type spatial;
 render_mode unshaded, shadows_disabled;
 #include "res://addons/terra_brush/shaders/brush_overlay.gdshaderinc"
 
-const float GROUND_RESIZE = 0.5;
 const int TOTAL_GRASS_VARIANTS = 4;
 
 uniform bool bilboard_y;
 uniform bool enable_margin;
 uniform vec3 color_margin:source_color;
+uniform vec2 terrain_size;
 
 // Colors of all of the grass instanced from a MultiMesh as seen from the top
 uniform sampler2D grass_color:source_color,filter_linear_mipmap,repeat_disable;
@@ -17,6 +17,7 @@ uniform sampler2D terrain_color:source_color,filter_linear_mipmap,repeat_disable
 uniform sampler2D mask_front:source_color,filter_linear_mipmap,repeat_disable,hint_default_black;
 uniform sampler2D grass_variants[TOTAL_GRASS_VARIANTS];
 
+// Only supported for Mobile and Forward+ renderers
 instance uniform int variant_index;
 
 
@@ -29,15 +30,15 @@ void vertex(){
 		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
 	}
 	
-	// Vertex to world space
-	vec2 world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz * GROUND_RESIZE;
+	// Vertex to world space (from center of texture)
+	vec2 world_position = 0.5 + (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz / terrain_size;
 	
 	// Coloring the mesh vertices will look exactly the same as coloring the pixels but more performant (asuming there are enough subdivisions along z-axis)
 	vec3 recolor_top = texture(grass_color, world_position).rgb;
 	vec3 recolor_root = texture(terrain_color, world_position).rgb;
 	float gradient_mask = texture(mask_front, UV).r;
 	
-	// Animate on click from TGTerrain script
+	// Brush overlay from TerraBrush script
 	recolor_root = draw_brush(world_position, recolor_root);
 	
 	// Mask the top of the grass with one color, mask the root with another, and add them

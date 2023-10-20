@@ -17,7 +17,7 @@ const SURFACE_FULL_RECT:Rect2i = Rect2i(Vector2i.ZERO, SURFACE_SIZE)
 		active = v
 
 @export_group("Advanced")
-@export var surface_texture:Texture2D ## The texture you'll be drawing with this brush. A new texture will be provided if you dont set this property
+@export var surface_texture:Texture2D ## The texture you'll be drawing with this brush. A new texture will be provided if you dont set your own
 @export var brush_texture:Texture2D ## Leave empty to use a simple round texture. Or use a grass texture for "grass_color" brush for example
 
 var t_color:Color
@@ -36,7 +36,7 @@ func _bake_brush_into_surface(scale:float, pos:Vector3):
 	var size:Vector2i = SURFACE_SIZE * scale #size in pixels
 	var pos_absolute:Vector2 = Vector2(pos.x, pos.z)/terrain.mesh.size #in [0,1] range
 	pos_absolute *= Vector2(SURFACE_SIZE) #move in pixel size
-	pos_absolute -= SURFACE_HALF_SIZE * scale #move to top-left corner
+	pos_absolute += SURFACE_HALF_SIZE * (1.0-scale) #move from center
 	
 	# Create color
 	var brush_img:Image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
@@ -53,5 +53,5 @@ func _bake_brush_into_surface(scale:float, pos:Vector3):
 	surface.blend_rect_mask( brush_img, brush_mask, SURFACE_FULL_RECT, pos_absolute)
 	surface_texture.update(surface)
 	texture_updated = true
-	
-	
+
+

@@ -22,33 +22,38 @@ enum SpawnType {SPAWN_ONE_VARIANT, SPAWN_RANDOM_VARIANTS}
 		active = true
 
 ## Amount of grass proportional to the whole surface
-@export var density:int = 128:
+@export var density:int = 512:
 	set(v):
 		density = v
 		on_active.emit()
 		active = true
-		_populate_grass()
+		populate_grass()
 
 @export_group("Shader Properties")
+## Adding or deleting a new variant might remap your current variant placements
 @export var variants:Array[Texture2D]:
 	set(v):
 		variants = v
-		_populate_grass()
+		populate_grass()
 
+## Grass always looks at the camera in y-axis
 @export var billboard_y:bool = true:
 	set(v):
 		billboard_y = v
-		_populate_grass()
-		
+		populate_grass()
+
+## If it should recolor the details you may have used in your variant texture.
+## Remember that variant textures must be white and their details black
 @export var margin_enable:bool = true:
 	set(v):
 		margin_enable = v
-		_populate_grass()
-		
+		populate_grass()
+
+## Detail recolor. See margin_enable
 @export var margin_color:Color = Color.WHITE:
 	set(v):
 		margin_color = v
-		_populate_grass()
+		populate_grass()
 
 
 func paint(scale:float, pos:Vector3, primary_action:bool):
@@ -60,6 +65,7 @@ func paint(scale:float, pos:Vector3, primary_action:bool):
 		if primary_action:
 			match spawn_type:
 				SpawnType.SPAWN_ONE_VARIANT:
+					# Middleground between variant color range
 					var v:float = float(variant)/variants.size() + 0.5/variants.size()
 					t_color = Color(v,v,v, 1.0)
 				SpawnType.SPAWN_RANDOM_VARIANTS:
@@ -69,10 +75,10 @@ func paint(scale:float, pos:Vector3, primary_action:bool):
 		
 		TerraBrush.GRASS.set_shader_parameter("grass_spawn", surface_texture)
 		_bake_brush_into_surface(scale, pos)
-		_populate_grass()
+		populate_grass()
 
 
-func _populate_grass():
+func populate_grass():
 	if not terrain or not surface_texture:
 		return
 	
@@ -83,11 +89,12 @@ func _populate_grass():
 	# Caches
 	var rng:RandomNumberGenerator = terrain.rng
 	var terrain_image:Image = surface_texture.get_image()
-	var height_image:Image = TBrushTerrainHeight.TEXTURE.get_image()
 	var terrain_size_m:Vector2 = terrain.mesh.size
 	var terrain_size_px:Vector2i = terrain_image.get_size()
 	var total_variants:int = variants.size()
 	var max_index:int = total_variants - 1
+	var space := terrain.get_world_3d().direct_space_state
+	var ray := PhysicsRayQueryParameters3D.new()
 	
 	# Reset previous instances
 	var multimesh_instances:Array[MultiMeshInstance3D]
@@ -95,6 +102,7 @@ func _populate_grass():
 		if child is MultiMeshInstance3D:
 			multimesh_instances.append(child)
 			child.multimesh.instance_count = 0
+			child.position = Vector3.ZERO # fix their position just in case
 	
 	# Add instances if more variants were added
 	if multimesh_instances.size() < total_variants:
@@ -108,8 +116,6 @@ func _populate_grass():
 			terrain.add_child(new_instance)
 			new_instance.owner = terrain.owner
 			new_instance.name = "Grass"
-			new_instance.position.x -= terrain_size_m.x*0.5
-			new_instance.position.z -= terrain_size_m.y*0.5
 	
 	# Delete instances if variants were reduced
 	else:
@@ -147,9 +153,18 @@ func _populate_grass():
 		if terrain_value < 1.0:
 			variant_index = roundi( terrain_value*max_index )
 		
-		var x_m:float = x*terrain_size_m.x
-		var z_m:float = z*terrain_size_m.y
-		var y_m:float = height_image.get_pixel(x_px, z_px).r * TBrushTerrainHeight.HEIGHT_STRENGTH
+		var x_m:float = (x - 0.5)*terrain_size_m.x
+		var z_m:float = (z - 0.5)*terrain_size_m.y
+		
+		# Raycast to the HeightMapShape3D to find the actual ground level (shape should've been updated in TBrushTerrainHeight)
+		ray.from = Vector3(x_m, 10.0, z_m)
+		ray.to = Vector3(x_m, -10.0, z_m)
+		var result := space.intersect_ray(ray)
+		if not result: continue
+		var y_m:float = result.position.y
+		
+		# Using "height_image" as height reference will spawn floating grass. The vertices wouldn't alignt perfectly with the image
+#		var y_m:float = height_image.get_pixel(x_px, z_px).r * TBrushTerrainHeight.HEIGHT_STRENGTH
 		
 		var pos := Vector3(x_m, y_m, z_m)
 		var transf := Transform3D(Basis(), Vector3()).translated( pos )

@@ -27,6 +27,7 @@ shader_parameter/brush_texture = ExtResource("4_5fapk")
 shader_parameter/bilboard_y = true
 shader_parameter/enable_margin = true
 shader_parameter/color_margin = Color(0.678431, 0.545098, 0.45098, 1)
+shader_parameter/terrain_size = Vector2(10, 10)
 shader_parameter/grass_color = ExtResource("3_2ru7k")
 shader_parameter/terrain_color = ExtResource("6_ctr3f")
 shader_parameter/mask_front = SubResource("GradientTexture2D_0gkox")

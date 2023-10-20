@@ -12,7 +12,7 @@ func _exit_tree():
 
 
 func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
-	if instanced_tool and event is InputEventMouse:
+	if instanced_tool and is_instance_valid(instanced_tool) and event is InputEventMouse:
 		var root = get_tree().get_edited_scene_root()
 		var space = root.get_world_3d().direct_space_state
 		var mouse = event.get_position() #mouse position from viewport might not work properly. Use event's mouse position instead
@@ -35,9 +35,9 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 			instanced_tool.paint(result.position, false)
 			
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP):
-			instanced_tool.scale(-10)
+			instanced_tool.scale(-5)
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN):
-			instanced_tool.scale(10)
+			instanced_tool.scale(5)
 		
 		if event is InputEventMouseButton:
 			return EditorPlugin.AFTER_GUI_INPUT_STOP
@@ -45,7 +45,7 @@ func _forward_3d_gui_input(cam:Camera3D, event:InputEvent):
 	return EditorPlugin.AFTER_GUI_INPUT_PASS
 
 func _apply_changes():
-	if instanced_tool:
+	if instanced_tool and is_instance_valid(instanced_tool):
 		instanced_tool.save()
 
 func _handles(object):

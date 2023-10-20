@@ -11,10 +11,10 @@ vec2 scale_from_center(vec2 uv, float s){
 }
 
 vec3 draw_brush(vec2 uv, vec3 surface){
-	vec2 uv_transformed_outer_line = scale_from_center( uv - brush_position + 0.5, brush_scale+0.02 );
+	vec2 uv_transformed_outer_line = scale_from_center( uv - brush_position, brush_scale+0.02 );
 	vec4 brush_pixel_outer_line = texture( brush_texture, uv_transformed_outer_line );
 	
-	vec2 uv_transformed = scale_from_center( uv - brush_position + 0.5, brush_scale );
+	vec2 uv_transformed = scale_from_center( uv - brush_position, brush_scale );
 	vec4 brush_pixel = texture( brush_texture, uv_transformed );
 	
 	// Brush with black ring
