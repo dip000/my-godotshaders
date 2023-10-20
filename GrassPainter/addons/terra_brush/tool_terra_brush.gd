@@ -9,7 +9,7 @@ extends MeshInstance3D
 class_name TerraBrush
 
 @export_range(1, 150, 1, "suffix:%") var brush_scale:float = 20
-@export var map_size:Vector2i = Vector2i(5,5): set=_set_map_size
+@export var map_size:Vector2i: set=_set_map_size
 
 @export var terrain_color := TBrushTerrainColor.new()
 @export var terrain_height := TBrushTerrainHeight.new()
@@ -32,6 +32,10 @@ var rng_state:int
 func _ready():
 	rng.set_seed( hash("TerraBrush <3") )
 	rng_state = rng.get_state()
+	grass_spawn.variants = [
+		preload("res://addons/terra_brush/textures/grass_small_texture.png"),
+		preload("res://addons/terra_brush/textures/grass_texture.png")
+	]
 	
 	# Always keep only one brush active at a time. Starts with "terrain_color"
 	_active_brush = terrain_color
@@ -69,7 +73,7 @@ func _setup():
 	_set_map_size( Vector2i(10, 10) )
 
 func _set_map_size(size:Vector2i):
-	if not has_node(BODY_NAME):
+	if not has_node(BODY_NAME) or size == Vector2i.ZERO:
 		return
 	print("Set map size")
 	
