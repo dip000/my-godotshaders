@@ -12,7 +12,6 @@ config_version=5
 
 config/name="GrassPainter"
 config/tags=PackedStringArray("godotshaders.com")
-run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
 boot_splash/bg_color=Color(0.807843, 0.670588, 0.576471, 1)
 boot_splash/show_image=false
@@ -27,4 +26,4 @@ enabled=PackedStringArray("res://addons/terra_brush/plugin.cfg")
 
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_environment="res://new_environment.tres"
+environment/defaults/default_environment="res://test_environment.tres"

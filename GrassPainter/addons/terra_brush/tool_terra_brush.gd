@@ -39,15 +39,17 @@ func _ready():
 	
 	# Always keep only one brush active at a time. Starts with "terrain_color"
 	_active_brush = terrain_color
+	terrain_color.active = true
 	for brush in [grass_color, terrain_color, terrain_height, grass_spawn]:
-		brush.active = (brush == terrain_color)
 		brush.on_active.connect(_deactivate_brushes.bind(brush))
 		brush.terrain = self
+		brush.surface_texture = brush.TEXTURE
 	
 	_setup()
 
 func _setup():
 	mesh = TERRAIN_MESH
+	GRASS.set_shader_parameter("terrain_size", map_size)
 	
 	if has_node(BODY_NAME):
 		return
@@ -69,15 +71,13 @@ func _setup():
 	base_collider.owner = owner
 	base_collider.name = BASE_COLLIDER_NAME
 	base_collider.shape = BoxShape3D.new()
-	
 	_set_map_size( Vector2i(10, 10) )
-
-func _set_map_size(size:Vector2i):
-	if not has_node(BODY_NAME) or size == Vector2i.ZERO:
-		return
-	print("Set map size")
 	
+func _set_map_size(size:Vector2i):
 	map_size = size
+	if size.x <= 0 or size.y <= 0:
+		return
+	
 	mesh.size = size
 	mesh.subdivide_width = size.x - 1
 	mesh.subdivide_depth = size.y - 1
