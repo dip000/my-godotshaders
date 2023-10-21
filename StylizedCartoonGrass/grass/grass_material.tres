@@ -1,0 +1,29 @@
+[gd_resource type="ShaderMaterial" load_steps=8 format=3 uid="uid://bn5ftyb51awph"]
+
+[ext_resource type="Shader" path="res://grass/grass.gdshader" id="1_o8bcc"]
+[ext_resource type="Texture2D" uid="uid://bjw8kja6m16cf" path="res://textures/grass_color.tres" id="2_kjfo5"]
+[ext_resource type="Texture2D" uid="uid://bvid0x0pyktow" path="res://textures/grass_small_texture.png" id="3_rvktm"]
+[ext_resource type="Texture2D" uid="uid://bs4ojwqd1sslv" path="res://textures/grass_texture.png" id="4_hio4k"]
+[ext_resource type="Texture2D" uid="uid://syrkqf8qqt58" path="res://textures/terrain_color.tres" id="5_v0oc8"]
+
+[sub_resource type="Gradient" id="Gradient_vhnkb"]
+offsets = PackedFloat32Array(0, 0.198276, 0.373134)
+colors = PackedColorArray(0, 0, 0, 1, 0.534361, 0.534361, 0.534361, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0gkox"]
+gradient = SubResource("Gradient_vhnkb")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[resource]
+resource_name = "grass"
+render_priority = 0
+shader = ExtResource("1_o8bcc")
+shader_parameter/bilboard_y = true
+shader_parameter/enable_margin = true
+shader_parameter/color_margin = Color(0.678431, 0.545098, 0.45098, 1)
+shader_parameter/terrain_size = Vector2(10, 10)
+shader_parameter/grass_color = ExtResource("2_kjfo5")
+shader_parameter/terrain_color = ExtResource("5_v0oc8")
+shader_parameter/mask_front = SubResource("GradientTexture2D_0gkox")
+shader_parameter/grass_variants = Array[Texture2D]([ExtResource("3_rvktm"), ExtResource("4_hio4k")])
