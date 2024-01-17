@@ -9,7 +9,7 @@
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mfo8e"]
 gradient = SubResource("Gradient_86gnx")
 fill_from = Vector2(0, 1)
-fill_to = Vector2(0, 0.2)
+fill_to = Vector2(0, 0)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aj2jj"]
 load_path = "res://.godot/imported/default_grass_v0.svg-79c5364d0fc8f1dc04f5ebb4dd0085e9.s3tc.ctex"
@@ -24,6 +24,7 @@ load_path = "res://.godot/imported/default_grass_v2.svg-1f590523d093aabb315eef4a
 render_priority = 0
 shader = ExtResource("1_5kvm2")
 shader_parameter/enable_details = true
+shader_parameter/billboard_y = false
 shader_parameter/detail_color = Color(0.470588, 0.376471, 0.309804, 1)
 shader_parameter/world_size = Vector2(10, 10)
 shader_parameter/world_position = Vector2(0.5, 0.5)
