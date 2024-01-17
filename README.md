@@ -16,3 +16,10 @@ Bakes a splash image over the surface texture so the shader doesn't need to keep
 
 ![6528490401dfb292982739](https://github.com/dip000/my-godotshaders/assets/58742147/635d6665-c63f-463a-8880-65b2d8b30a55)
 
+## Stylized Cartoon Grass
+Another grass shader. But prettier, optimized, and cartoon-looking <br />
+See the plug-in used to make this scene https://github.com/dip000/terra-brush-scatterer
+
+![preview](https://github.com/dip000/my-godotshaders/assets/58742147/4f7bb752-f074-4818-b0bc-5b37b480728c)
+
+
