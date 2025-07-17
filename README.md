@@ -22,4 +22,8 @@ See the plug-in used to make this scene https://github.com/dip000/godot-landscap
 
 ![preview](https://github.com/dip000/my-godotshaders/assets/58742147/4f7bb752-f074-4818-b0bc-5b37b480728c)
 
+## WindTrailWithLoops
+Wind trails using a single mesh and GPUParticles3D. Though the particle avoidance is kind of wacky..
+![68798a3da0857038899566](https://github.com/user-attachments/assets/21e9fbbc-22cf-4787-a09b-b386452483d5)
+
 
