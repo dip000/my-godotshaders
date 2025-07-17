@@ -1,0 +1,200 @@
+[gd_scene load_steps=16 format=3 uid="uid://bkr68bgsk4t1y"]
+
+[ext_resource type="Shader" uid="uid://bl1mtt0sej2y7" path="res://wind_trail_mesh.gdshader" id="1_5hfv0"]
+[ext_resource type="Shader" uid="uid://bhr2ihyy0k6sx" path="res://wind_trail_particles.gdshader" id="2_0bhed"]
+
+[sub_resource type="Curve" id="Curve_fr1sm"]
+_data = [Vector2(0, 0), 0.0, 0.748692, 0, 1, Vector2(0.502688, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0bhed"]
+render_priority = 0
+shader = ExtResource("1_5hfv0")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/fade_time = 5.0
+shader_parameter/time_scale = 3.0
+shader_parameter/wave_amplitude = 0.1
+shader_parameter/wave_frequency = 1.0
+shader_parameter/wave_length = 2.0
+shader_parameter/wave_count = 1.0
+shader_parameter/twist_amplitude = 0.1
+shader_parameter/twist_frequency = 1.0
+shader_parameter/loop_radius = 1.5
+shader_parameter/loop_count = 0.5
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_m0rpm"]
+material = SubResource("ShaderMaterial_0bhed")
+custom_aabb = AABB(0, 0, 0, 0, 20, 0)
+radius = 0.05
+cap_top = false
+cap_bottom = false
+curve = SubResource("Curve_fr1sm")
+
+[sub_resource type="Curve" id="Curve_c6xj6"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.526144, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_6bw2v"]
+curve = SubResource("Curve_c6xj6")
+
+[sub_resource type="Curve" id="Curve_kem5a"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gxmxl"]
+curve = SubResource("Curve_kem5a")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_n4w22"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = 2.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, 0, 0)
+alpha_curve = SubResource("CurveTexture_6bw2v")
+turbulence_noise_speed_random = 4.0
+turbulence_influence_min = 0.968
+turbulence_influence_max = 1.0
+turbulence_initial_displacement_min = 60.1
+turbulence_initial_displacement_max = 73.6
+turbulence_influence_over_life = SubResource("CurveTexture_gxmxl")
+collision_mode = 2
+
+[sub_resource type="Curve" id="Curve_6bw2v"]
+_data = [Vector2(0, 0), 0.0, 0.748692, 0, 1, Vector2(0.502688, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kem5a"]
+render_priority = 0
+shader = ExtResource("2_0bhed")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/fade_time = 5.0
+shader_parameter/time_scale = 3.0
+shader_parameter/wave_amplitude = 0.1
+shader_parameter/wave_frequency = 1.0
+shader_parameter/wave_length = 2.0
+shader_parameter/wave_count = 1.0
+shader_parameter/twist_amplitude = 0.1
+shader_parameter/twist_frequency = 1.0
+shader_parameter/loop_radius = 1.0
+shader_parameter/loop_count = 0.5
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_gxmxl"]
+material = SubResource("ShaderMaterial_kem5a")
+custom_aabb = AABB(0, 0, 0, 0, 20, 0)
+radius = 0.05
+cap_top = false
+cap_bottom = false
+curve = SubResource("Curve_6bw2v")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_gdsc3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0bhed"]
+size = Vector3(4, 0.2, 4)
+
+[node name="Demo" type="Node3D"]
+
+[node name="WindMesh" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="Label3D" type="Label3D" parent="WindMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18975, 0)
+billboard = 1
+text = "USING A MESH
+* Single trail
+* Not interactive"
+
+[node name="WindTrail" type="MeshInstance3D" parent="WindMesh"]
+transform = Transform3D(1, 1.06581e-14, -4.02341e-21, 0, -4.37114e-08, -1, -1.06581e-14, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("TubeTrailMesh_m0rpm")
+skeleton = NodePath("../..")
+
+[node name="WindParticles" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -4, 0, 0)
+
+[node name="Label3D" type="Label3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.37114e-08, -1)
+billboard = 1
+text = "USING PARTICLES
+ *Works with GPUParticlesAttractors/Colliders!
+ *Not easy to offset time over just one GPUParticles3D"
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 1.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D3" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 2.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D4" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 3.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D5" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 4.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D6" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 5.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="GPUParticles3D7" type="GPUParticles3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -8.74228e-08, 0)
+instance_shader_parameters/extra_offset_time = 6.0
+amount = 1
+lifetime = 8.0
+visibility_aabb = AABB(-9.73, -4, -10.12, 20, 50, 20)
+process_material = SubResource("ParticleProcessMaterial_n4w22")
+draw_pass_1 = SubResource("TubeTrailMesh_gxmxl")
+
+[node name="Character" type="MeshInstance3D" parent="WindParticles"]
+transform = Transform3D(-4.37114e-08, 8.74228e-08, 1, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, -8.74228e-08, -2.30171, 7.98448, 0.0165795)
+mesh = SubResource("CapsuleMesh_gdsc3")
+skeleton = NodePath("GPUParticlesAttractorBox3D")
+
+[node name="GPUParticlesAttractorBox3D" type="GPUParticlesAttractorBox3D" parent="WindParticles/Character"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14082, 0.0136864, 0.148346)
+strength = -5.0
+size = Vector3(3.29405, 1.9686, 2.74213)
+
+[node name="Wall" type="MeshInstance3D" parent="WindParticles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.41777, 9.44268, -4.12753e-07)
+mesh = SubResource("BoxMesh_0bhed")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="WindParticles/Wall"]
+size = Vector3(4, 0.2, 4)
